@@ -1,0 +1,50 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en-us" {% block ng_app_block %}ng-app="{% block ng_app %}dummy-app{% endblock %}"{% endblock %}>
+<head>
+	<meta charset="utf-8">
+	<title>{% block title %}Coding Tool{% endblock %}</title>
+
+	<link rel="stylesheet" href="{% static "bower_components/normalize-css/normalize.css" %}">
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,400,300,600,700' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" type="text/css" href="{% static "bower_components/bootstrap/dist/css/bootstrap.min.css" %}">
+	<link rel="stylesheet" href="{% static "coding/css/default.css" %}">
+
+	<base href="/">
+
+	{% block additional_head %}
+	{% endblock %}
+
+	<style>
+	{% block page_style %}
+	{% endblock %}
+	</style>
+</head>
+<body {% block body_attributes %}{% endblock %}>
+	{% block page_body %}
+	<div id="page-wrapper">
+
+		<div id="content-wrapper">
+			<div class="content">
+				<div class="container">
+					{% block page_content %}
+
+					{% endblock %}
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+	{% endblock %}
+
+	{% block core_scripts %}
+	{% endblock %}
+
+	{% block end_scripts %}
+	{% endblock %}
+
+
+</body>
+</html>
