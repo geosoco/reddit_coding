@@ -4,3 +4,4 @@ djangorestframework==3.3.3
 Markdown==2.6.6
 psycopg2==2.6.1
 sqlparse==0.1.19
+django-pipeline==1.6.8
