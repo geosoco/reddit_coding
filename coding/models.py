@@ -42,15 +42,15 @@ class Code(base_models.FullAuditModel):
 
 
 class Assignment(base_models.FullAuditModel):
-	"""
-	Coding assignment model.
-	"""
+    """
+    Coding assignment model.
+    """
     name = models.CharField(max_length=64)
     description = models.TextField(null=True, blank=True)
     code_schemes = models.ManyToManyField(CodeScheme)
     coder = models.ForeignKey(User)
-    assigned_users = models.ManyToManyField(mainUser, blank=True, null=True)
-    assigned_tweets = models.ManyToManyField(mainTweet, blank=True, null=True)
+    #assigned_users = models.ManyToManyField(mainUser, blank=True, null=True)
+    assigned_tweets = models.ManyToManyField(mainComment, blank=True, null=True)
 
     def __str__(self):
         return "%s (%s - %s)" % (
@@ -63,9 +63,9 @@ class Assignment(base_models.FullAuditModel):
 
 
 class CommentCodeInstance(base_models.FullAuditModel):
-	"""
-	Code Instance model for comments.
-	"""
+    """
+    Code Instance model for comments.
+    """
     code = models.ForeignKey(Code)
     comment = models.ForeignKey(mainComment)
     assignment = models.ForeignKey(Assignment, null=True, blank=True)

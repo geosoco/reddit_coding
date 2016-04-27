@@ -39,7 +39,10 @@ BASE_APPS = [
 ]
 
 PROJECT_APPS = [
+    'base',
     'main',
+    'coding',
+    'api'
 ]
 
 INSTALLED_APPS = BASE_APPS + PROJECT_APPS
@@ -122,6 +125,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIR = [
+    os.path.join(BASE_DIR, 'reddit_coding', 'static')
+]
 
 
 # Rest Framework
@@ -133,4 +139,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }
+
+# Internal IPs for django static
+INTERNAL_IPS = ()
 
