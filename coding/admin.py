@@ -31,5 +31,5 @@ class AssignmentAdmin(admin.ModelAdmin):
 
 admin.site.register(models.Code, CodeAdmin)
 admin.site.register(models.CodeScheme, CodeSchemeAdmin)
-admin.site.register(models.CommentCodeInstance, TweetCodeInstanceAdmin)
+admin.site.register(models.CommentCodeInstance, CommentCodeInstanceAdmin)
 admin.site.register(models.Assignment, AssignmentAdmin)
