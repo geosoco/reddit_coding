@@ -1,0 +1,27 @@
+{
+  "name": "reddit_coding",
+  "homepage": "https://github.com/geosoco/reddit_coding",
+  "authors": [
+    "John Robinson <soco@uw.edu>"
+  ],
+  "description": "Qualitative Reddit Coding App",
+  "main": "",
+  "moduleType": [],
+  "license": "BSD3",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.5",
+    "angular-spinner": "^0.8.1",
+    "angular-ui-router": "^0.2.18",
+    "spin.js": "^2.3.2",
+    "bootstrap": "^3.3.6",
+    "angular-resource": "^1.5.5"
+  }
+}
