@@ -19,7 +19,10 @@ gulp.task('copy-js', function() {
 
 gulp.task('copy-css', function() {
 	return gulp
-		.src("bower_components/bootstrap/dist/css/*")
+		.src([
+			"bower_components/bootstrap/dist/css/*",
+			"bower_components/normalize-css/normalize.css"
+		])
 		.pipe(gulp.dest(static_root + "css/vendor/"))
 })
 

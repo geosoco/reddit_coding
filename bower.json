@@ -22,6 +22,7 @@
     "angular-ui-router": "^0.2.18",
     "spin.js": "^2.3.2",
     "bootstrap": "^3.3.6",
-    "angular-resource": "^1.5.5"
+    "angular-resource": "^1.5.5",
+    "normalize-css": "^4.1.1"
   }
 }
