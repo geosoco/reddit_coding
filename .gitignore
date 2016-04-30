@@ -96,5 +96,9 @@ bower_components/
 reddit_coding/static/
 
 # ignore the root static folder
-static/
+/static/
+
+# OSX specific things
+.DS_Store
+
 

@@ -11,7 +11,7 @@ gulp.task('copy-js', function() {
 			"bower_components/angular-resource/angular-resource*.*",
 			"bower_components/angular-spinner/angular-spinner.*",
 			"bower_components/angular-ui-router/release/*.js",
-			"bower_components/bootstrap/dist/bootstrap.*",
+			"bower_components/bootstrap/dist/js/bootstrap.*",
 			"bower_components/jquery/dist/*.*"
 		])
 		.pipe(gulp.dest(static_root + 'js/vendor/'))
