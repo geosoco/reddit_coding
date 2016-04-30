@@ -95,3 +95,6 @@ bower_components/
 # node temporary static dirs
 reddit_coding/static/
 
+# ignore the root static folder
+static/
+
