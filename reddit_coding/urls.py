@@ -18,11 +18,16 @@ from django.conf.urls import include, patterns, url
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'api/', include('rest_framework.urls', namespace='rest_framework'))
+    #url(r'', include('main.urls')),
+    url(r'^api/', include('api.urls')),
+    #url(r'^coding/', include('coding.urls')),
+    url('^', include('django.contrib.auth.urls')),
+    url(r'^admin/', include(admin.site.urls)),
 ]
 
 
 if settings.DEBUG:
-	import debug_toolbar
-	urlpatterns += [url(r'^__debug__/', include(debug_toolbar.urls)),]
+    import debug_toolbar
+    urlpatterns += [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+        ]

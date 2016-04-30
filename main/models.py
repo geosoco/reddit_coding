@@ -8,10 +8,11 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.contrib.postgres.fields import JSONField
 
 
 class Comment(models.Model):
-    data = models.TextField(blank=True, null=True)  # This field type is a guess.
+    data = JSONField(blank=True, null=True)
     id = models.CharField(primary_key=True, max_length=8)
     created_ut = models.IntegerField(blank=True, null=True)
     created_utc = models.DateTimeField(blank=True, null=True)
@@ -25,12 +26,12 @@ class Comment(models.Model):
 
 
 class Submission(models.Model):
-    data = models.TextField(blank=True, null=True)  # This field type is a guess.
     id = models.CharField(primary_key=True, max_length=8)
     created_ut = models.IntegerField(blank=True, null=True)
     created_utc = models.DateTimeField(blank=True, null=True)
     author = models.CharField(max_length=24, blank=True, null=True)
     in_set = models.NullBooleanField()
+    data = JSONField(blank=True, null=True)
 
     class Meta:
         managed = False

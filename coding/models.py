@@ -5,8 +5,6 @@ from django.contrib.auth.models import User
 import base.models as base_models
 import main.models as main_models
 
-from main.models import Comment as mainComment
-
 
 # Create your models here.
 class CodeScheme(base_models.FullAuditModel):
@@ -49,8 +47,10 @@ class Assignment(base_models.FullAuditModel):
     description = models.TextField(null=True, blank=True)
     code_schemes = models.ManyToManyField(CodeScheme)
     coder = models.ForeignKey(User)
-    #assigned_users = models.ManyToManyField(mainUser, blank=True, null=True)
-    assigned_tweets = models.ManyToManyField(mainComment, blank=True, null=True)
+    assigned_submissions = models.ManyToManyField(
+        main_models.Submission, blank=True)
+    assigned_comments = models.ManyToManyField(
+        main_models.Comment, blank=True)
 
     def __str__(self):
         return "%s (%s - %s)" % (
@@ -62,12 +62,30 @@ class Assignment(base_models.FullAuditModel):
         return u"%s (%s - %s)" % (self.id, self.name, self.coder.id)
 
 
+class SubmissionCodeInstance(base_models.FullAuditModel):
+    """
+    Code instance model for submissions.
+    """
+
+    code = models.ForeignKey(Code)
+    submission = models.ForeignKey(main_models.Submission)
+    assignment = models.ForeignKey(Assignment, null=True, blank=True)
+
+    def __str__(self):
+        return "%s - %d - %s" % (
+            self.assignment.id, self.submission.id, self.code.name)
+
+    def __unicode__(self):
+        return u"%s - %d - %s" % (
+            self.assignment.id, self.submission.id, self.code.name)
+
+
 class CommentCodeInstance(base_models.FullAuditModel):
     """
     Code Instance model for comments.
     """
     code = models.ForeignKey(Code)
-    comment = models.ForeignKey(mainComment)
+    comment = models.ForeignKey(main_models.Comment)
     assignment = models.ForeignKey(Assignment, null=True, blank=True)
 
     def __str__(self):
@@ -77,4 +95,3 @@ class CommentCodeInstance(base_models.FullAuditModel):
     def __unicode__(self):
         return u"%s - %d - %s" % (
             self.assignment.id, self.comment.id, self.code.name)
-
