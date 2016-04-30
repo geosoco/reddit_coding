@@ -20,7 +20,13 @@ Development deployment
 	   	```python -c "import random,string;print 'SECRET_KEY=\"%s\"'%''.join([random.SystemRandom().choice(\"{}{}{}\".format(string.ascii_letters, string.digits, string.punctuation)) for i in range(63)])"
 
 4. Add this environment to the `postactivate` file in your virtual env. If your virtualenv is active, you can find the file in the same directory as the python binary using `which python`. It's probably something like `~/envs/reddit_coding/bin/postactivate`. The line should be ```export DJANGO_SETTINGS_MODULE="reddit_coding.settings.dev"```. After you do this, you'll need to reactivate your virtualenv by typing `deactivate` and `workong reddit_coding` again. 
-5. 
+5. Install node, bower, and gulp.
+	a. On Ubuntu type, follow [these instructions](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions). Also, you'll probably want to also install nodejs-legacy. ```sudo apt-get install nodejs-legacy``` so that the symlink to `node` is installed.
+	b. Install bower. ```sudo npm install -g bower```
+	c. Install gulp. ```sudo npm install -g gulp```
+5. Install all the bower files. ```bower install```
+6. Use gulp to copy distribution files over. ```gulp```
+
 
 
 Resuming work
