@@ -26,7 +26,8 @@ Development deployment
 	c. Install gulp. ```sudo npm install -g gulp```
 5. Install all the bower files. ```bower install```
 6. Use gulp to copy distribution files over. ```gulp```
-
+7. ```python manage.py collectstatic```
+8. ```python manage.py migrate```
 
 
 Resuming work
