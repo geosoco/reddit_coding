@@ -6,8 +6,8 @@
 	<meta charset="utf-8">
 	<title>{% block title %}Coding Tool{% endblock %}</title>
 
-	<link rel="stylesheet" href="{% static "vendor/css/normalize.css" %}">
-	<link rel="stylesheet" type="text/css" href="{% static "vendor/css/bootstrap.css" %}">
+	<link rel="stylesheet" href="{% static "css/vendor/normalize.css" %}">
+	<link rel="stylesheet" type="text/css" href="{% static "css/vendor/bootstrap.css" %}">
 	<link rel="stylesheet" href="{% static "css/default.css" %}">
 
 
@@ -21,7 +21,7 @@
 </head>
 <body>
 	<div id="page-wrapper">
-		{% include "main/header.html" %}
+		{% include "base/header.html" %}
 
 		<div id="content-wrapper">
 			<div class="content">
@@ -32,15 +32,15 @@
 			</div>
 		</div>
 
-		{% include "main/footer.html" %}
+		{% include "base/footer.html" %}
 	</div>
 
 
-	<script src="{% static "vendor/js/jquery.min.js" %}"></script>
-	<script src="{% static "vendor/js/angular.js" %}"></script>
-	<script src="{% static "vendor/js/angular-route.js" %}"></script>
-	<script src="{% static "vendor/js/angular-cookies.js" %}"></script>
-	<script src="{% static "vendor/js/bootstrap.min.js" %}"></script>
+	<script src="{% static "js/vendor/jquery.min.js" %}"></script>
+	<script src="{% static "js/vendor/angular.js" %}"></script>
+	<script src="{% static "js/vendor/angular-route.js" %}"></script>
+	<script src="{% static "js/vendor/angular-cookies.js" %}"></script>
+	<script src="{% static "js/vendor/bootstrap.min.js" %}"></script>
 
 
     {% block end_scripts %}
