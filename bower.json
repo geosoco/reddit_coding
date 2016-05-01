@@ -23,6 +23,8 @@
     "spin.js": "^2.3.2",
     "bootstrap": "^3.3.6",
     "angular-resource": "^1.5.5",
-    "normalize-css": "^4.1.1"
+    "normalize-css": "^4.1.1",
+    "toastr": "^2.1.2",
+    "angular-toastr": "^1.7.0"
   }
 }
