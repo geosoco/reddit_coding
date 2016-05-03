@@ -1,8 +1,8 @@
 {% load staticfiles %}
 
 <!DOCTYPE html>
-<html lang="en-us">
-<head {% block head_attrs %}{% endblock %}>
+<html lang="en-us" {% block html_attrs %}{% endblock %}>
+<head>
 	<meta charset="utf-8">
 	<title>{% block title %}Coding Tool{% endblock %}</title>
 
@@ -20,6 +20,7 @@
     </style>
 </head>
 <body {% block body_attrs %}{% endblock %}>
+	{% block page_body %}
 	<div id="page-wrapper">
 		{% include "base/header.html" %}
 
@@ -34,17 +35,17 @@
 
 		{% include "base/footer.html" %}
 	</div>
-
-
-	<script src="{% static "js/vendor/jquery.min.js" %}"></script>
+	{% endblock %}
 	<script src="{% static "js/vendor/angular.js" %}"></script>
 	<script src="{% static "js/vendor/angular-resource.js" %}"></script>
+	<script src="{% static "js/vendor/angular-animate.js" %}"></script>
 	<script src="{% static "js/vendor/angular-ui-router.js" %}"></script>
-	<script src="{% static "js/vendor/bootstrap.min.js" %}"></script>
 	<script src="{% static "js/vendor/toastr.js" %}"></script>
 	<script src="{% static "js/vendor/angular-toastr.js" %}"></script>
 	<script src="{% static "js/vendor/spin.js" %}"></script>
 	<script src="{% static "js/vendor/angular-spinner.js" %}"></script>
+	<script src="{% static "js/vendor/jquery.min.js" %}"></script>
+	<script src="{% static "js/vendor/bootstrap.min.js" %}"></script>
 
 
     {% block end_scripts %}
