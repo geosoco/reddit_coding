@@ -1,31 +1,41 @@
+<div class="container">
+	<div class="content">
+		<h1>Home</h1>
 
-<div class="content">
-	<h1>Home</h1>
-	<a href="#" ui-sref="client.add" class="btn btn-default">Add Client</a>
+		<nav>
+			<ul>
+				<li></li>
+			</ul>
+		</nav>
 
-	<table class="table table-striped">
-		<thead>
-			<tr>
-				<th>id</th>
-				<th>Name</th>
-				<th>Active Jobs</th>
-				<th>Token</th>
-				<th>Action</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="c in lc.clients">
-				<td><a ui-sref="client.edit({id:c.id})">{{c.id}}</a></td>
-				<td><a ui-sref="client.edit({id:c.id})">{{c.username}}</a></td>
-				<td>{{c.active_jobs[0].name}}</td>
-				<td>{{c.auth_token.key}}</td>
-				<td>
-					<div class="btn-toolbar" role="toolbar" aria-label="Actions for this client">
-						<div class="btn-group" role="group" aria-label="edit"><a ui-sref="client.edit({id:c.id})">edit</a></div>
-						<div class="btn-group" role="group" aria-label="delete"><a ng-click="lc.delete(c);">delete</a></div>
-					</div>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+		<!-- 
+		<a href="#" ui-sref="client.add" class="btn btn-default">Add Client</a>
+
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>id</th>
+					<th>Name</th>
+					<th>Active Jobs</th>
+					<th>Token</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="c in lc.clients">
+					<td><a ui-sref="client.edit({id:c.id})">{{c.id}}</a></td>
+					<td><a ui-sref="client.edit({id:c.id})">{{c.username}}</a></td>
+					<td>{{c.active_jobs[0].name}}</td>
+					<td>{{c.auth_token.key}}</td>
+					<td>
+						<div class="btn-toolbar" role="toolbar" aria-label="Actions for this client">
+							<div class="btn-group" role="group" aria-label="edit"><a ui-sref="client.edit({id:c.id})">edit</a></div>
+							<div class="btn-group" role="group" aria-label="delete"><a ng-click="lc.delete(c);">delete</a></div>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		-->
+	</div>
 </div>
