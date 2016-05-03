@@ -17,7 +17,8 @@ gulp.task('copy-js', function() {
 			"bower_components/spin.js/spin.*",
 			"bower_components/toastr/toastr.js*",
 			"bower_components/toastr/toastr.min.js",
-			"bower_components/angular-toastr/dist/*.js"
+			"bower_components/angular-toastr/dist/*.js",
+			"bower_components/angular-animate/angular-animate.*"
 		])
 		.pipe(gulp.dest(static_root + 'js/vendor/'))
 });
