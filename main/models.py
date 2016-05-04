@@ -19,6 +19,13 @@ class Comment(models.Model):
     author = models.CharField(max_length=24, blank=True, null=True)
     parent_id = models.CharField(max_length=8, blank=True, null=True)
     article = models.CharField(max_length=8, blank=True, null=True)
+    num_children = models.IntegerField(blank=True, null=True)
+    depth = models.IntegerField(blank=True, null=True)
+    root_comment = models.CharField(max_length=8, blank=True, null=True)
+    num_descendants = models.IntegerField(blank=True, null=True)
+    last_descendant_time_utc = models.DateTimeField(blank=True, null=True)
+    last_descendant = models.CharField(max_length=8, blank=True, null=True)
+    cumulative_score = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -32,6 +39,7 @@ class Submission(models.Model):
     author = models.CharField(max_length=24, blank=True, null=True)
     in_set = models.NullBooleanField()
     data = JSONField(blank=True, null=True)
+    num_children = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
