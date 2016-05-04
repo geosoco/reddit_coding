@@ -12,6 +12,11 @@
 		return results.results;
 	}
 
+	function transformSingleGetResponse(data) {
+		var results = angular.fromJson(data);
+		return results.results[0];
+	}
+
 
 	/*
 	 * basic service
@@ -25,7 +30,10 @@
 				update: { method: 'PATCH'},
 				delete: { method: 'DELETE'},
 				save: { method: 'POST'},
-				get: { method: 'GET'}
+				get: { 
+					method: 'GET',
+					transformResponse: transformSingleGetResponse			
+				}
 			};
 
 	/*

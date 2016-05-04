@@ -3,6 +3,9 @@
 
 
 function HeaderCtrl($scope, $location) {
+	var vm = this;
+
+	this.user = $scope.$parent.$root.user;
 	console.log("HeaderCtrl!");
 }
 

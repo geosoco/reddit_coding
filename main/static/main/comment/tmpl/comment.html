@@ -1,0 +1,14 @@
+
+
+<div class="comment">
+	<div ng-if="slc.sub.$resolved === false">
+		<div class="loading-container col-md-12">
+			<div us-spinner spinner-key="tweet-list" spinner-start-active="true"></div>
+		</div>
+	</div>
+	<div ng-if="comment.$resolved === true">
+		<h1>{{comment.data.text}}</h1>
+		<div><span>comments: </span><span>{{comment.data.num_comments}}</span></div>
+		<div>test</div>
+	</div>
+</div>

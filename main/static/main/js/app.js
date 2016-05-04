@@ -8,7 +8,8 @@
 		'toastr',
 		'angularSpinner',
 		'main.services',
-		'main.app'
+		'main.app',
+		'main.submission'
 	]);
 
 })();
