@@ -95,3 +95,4 @@ class CommentCodeInstance(base_models.FullAuditModel):
     def __unicode__(self):
         return u"%s - %d - %s" % (
             self.assignment.id, self.comment.id, self.code.name)
+

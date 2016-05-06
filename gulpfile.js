@@ -18,7 +18,13 @@ gulp.task('copy-js', function() {
 			"bower_components/toastr/toastr.js*",
 			"bower_components/toastr/toastr.min.js",
 			"bower_components/angular-toastr/dist/*.js",
-			"bower_components/angular-animate/angular-animate.*"
+			"bower_components/angular-animate/angular-animate.*",
+			"bower_components/angular-sanitize/angular-sanitize.*",
+			"bower_components/showdown/dist/showdown.*",
+			"bower_components/moment/min/moment*.js",
+			"bower_components/angular-moment/angular-moment.*js*",
+			"bower_components/ng-showdown/dist/*.*",
+			"bower_components/he/he.js"
 		])
 		.pipe(gulp.dest(static_root + 'js/vendor/'))
 });

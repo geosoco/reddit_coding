@@ -33,7 +33,7 @@ class TreeNode(object):
         if self.obj is None:
             node.root_comment_id = node.id
         else:
-            node.root_comment_id = self.id
+            node.root_comment_id = self.root_comment_id
         # increment score
         self.cumulative_score += node.obj.data['score']
 

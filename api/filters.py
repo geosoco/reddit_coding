@@ -29,3 +29,12 @@ class TweetFilter(filters.FilterSet):
             "user", "in_reply_to_user", "in_reply_to_status_id",
             "created_ts", "retweeted_status", "media_set", "media"]
 """
+
+
+class CommentCodeInstanceFilter(filters.FilterSet):
+
+
+    class Meta:
+        model = coding_models.CommentCodeInstance
+        fields = [
+            'created_by', 'code', 'comment', 'assignment']

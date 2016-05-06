@@ -1,0 +1,253 @@
+/* 
+ * ========================
+ * coding.css
+ * ========================
+ */
+
+ui-view { min-height: 100%; }
+
+
+#page-body {
+	height: 100%;
+}
+
+#coding-sidebar { 
+	min-height: 100%;
+	background: #333;
+	color: #eee;
+	position: fixed;
+	right: 0;
+	top: 0;
+	overflow-y: scroll;
+}
+
+#main-content {
+	height: 100%;
+	margin-top: 20px;
+}
+
+
+/*
+ *
+ * both submission and comments
+ *
+ */
+
+.submission p, .comment p {
+	margin-bottom: 0;
+}
+
+
+.submission .entry .flat-list.buttons a,
+.comment .entry .flat-list.buttons a {
+	color: #888;
+	
+}
+
+.submission .entry .flat-list.buttons li,
+.comment .entry .flat-list.buttons li {
+	padding-right: 4px;
+	font-size: x-small;
+	font-weight: bold;
+}
+
+.submission .entry, 
+.comment .entry {
+	margin-left: 10px;
+	overflow: hidden;
+}
+
+.tagline {
+	font-size: x-small;
+	color: #888;
+}
+
+.selected > .comment-cntr {
+	background: #ff8;
+}
+
+/*
+ *
+ * submission styles
+ *
+ */
+
+.submission {
+	padding: 10px 0;
+	border-bottom: 1px dotted #aaa;
+	margin-bottom: 20px;
+}
+
+
+.submission .domain, .submission .domain a {
+	color: #888;
+	font-size: x-small;
+}
+
+.submission .vote-box {
+	float: left;
+	min-width: 15px;
+	margin-right: 7px;
+	height: 100%;
+	font-weight: bold;
+	color: #aaa;
+}
+
+.submission .arrow {
+	margin: 0 auto;
+}
+
+.submission .title {
+	margin-bottom: 1px;
+	font-size: medium;
+}
+
+.submission .tagline {
+	margin-bottom: 0;
+}
+
+.submission .thumbnail {
+	float: left;
+	min-width: 70px;
+	min-height: 70px;
+	overflow: hidden;
+	margin-right: 5px;
+	margin-bottom: 2px;
+}
+
+.submission.selected {
+	background: #FF8;
+}
+
+
+/*
+ *
+ * comment default styles
+ *
+ */
+
+.comment.collapsed > .comment-cntr > .entry > .usertext-body, 
+.comment.collapsed > .comment-cntr > .entry > .flat-list.buttons,
+.comment.collapsed .children {
+	display: none;
+}
+
+.comment.collapsed > .comment-cntr > .vote-box {
+	visibility: hidden;
+	height: 1px;
+}
+
+.comment:not(.collapsed) > .comment-cntr > .entry .numchildren {
+	display: none;
+}
+.comment.collapsed > .comment-cntr > .entry .numchildren {
+	display: inline;
+}
+
+.comment.collapsed > .comment-cntr > .entry > .tagline a {
+	color: #888;
+}
+
+
+.comment-cntr {
+	margin-left: 10px;
+}
+
+
+.usertext-body blockquote {
+	border-left: 2px solid #AAA;
+	font-size: 14px;
+	margin-left: 5px;
+	padding: 0 8px;
+	color: #4f4f4f
+}
+
+.comment .entry .flat-list.buttons {
+	margin-bottom: 0;
+}
+
+.comment .entry .flat-list.buttons a:hover {
+	text-decoration: underline;
+}
+
+
+.comment .vote-box {
+	float: left;
+	width: 15px;
+	margin-right: 7px;
+	height: 100%;
+}
+
+
+
+ul.comment-replies {
+	border-left: 1px dotted #ddd;
+	margin-left: 15px;
+	margin-top: 10px;
+	padding-left: 0px;
+}
+
+ul.comment-replies li {
+	list-style-position: inside;
+}
+
+.comment .entry a.author {
+	font-weight: bold;
+}
+
+
+
+/*
+ *
+ * list styles
+ *
+ */
+
+.no-bullets {
+	list-style: none;
+}
+
+ul.flat-list {
+	list-style: none;
+	padding-left: 0;
+}
+
+ul.flat-list > li {
+	display: inline;
+}
+
+
+
+
+/*
+ *
+ *
+ *
+ */
+
+.arrow {
+    margin: 2px 0px 0px 0px;
+    width: 100%;
+    height: 14px;
+    display: block;
+    cursor: pointer;
+    background-position: center center;
+    background-repeat: no-repeat;
+    width: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    outline: none;
+}
+
+
+.arrow.up {
+    background-image: url(/static/reddit/img/sprite-reddit.png);
+    background-position: -42px -865px;
+    background-repeat: no-repeat;
+}
+
+.arrow.down {
+    background-image: url(/static/reddit/img/sprite-reddit.png);
+    background-position: 0px -865px;
+    background-repeat: no-repeat;
+}

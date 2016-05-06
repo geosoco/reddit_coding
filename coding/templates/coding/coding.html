@@ -1,0 +1,37 @@
+{% extends "base/base.html" %}
+{% load staticfiles %}
+
+{% block additional_head %}
+	<link rel="stylesheet" href="{% static "coding/css/coding.css" %}">
+{% endblock %}
+
+{% block html_attrs %}ng-app="coding.app"{% endblock %}
+
+{% block body_attrs %}ng-controller="CodingRootCtrl as rootctrl"{% endblock %}
+
+{% block page_body %}
+<div ui-view></div>
+
+
+{% endblock %}
+
+
+
+{% block end_scripts %}
+	<script src="{% static "main/js/services.js" %}"></script>
+	<script src="{% static "main/js/components/endpoint.factories.js" %}"></script>
+	<script src="{% static "coding/home/js/coding.home.config.js" %}"></script>
+	<script src="{% static "coding/home/js/coding.home.controllers.js" %}"></script>
+	<script src="{% static "coding/coding/js/coding.coding.config.js" %}"></script>
+	<script src="{% static "coding/coding/js/coding.coding.controllers.js" %}"></script>
+	<script src="{% static "main/submission/js/submission.js" %}"></script>
+	<script src="{% static "main/submission/js/submission.controllers.js" %}"></script>
+	<script src="{% static "main/submission/js/submission.directives.js" %}"></script>
+	<script src="{% static "main/comment/js/comment.js" %}"></script>
+	<script src="{% static "main/comment/js/comment.controllers.js" %}"></script>
+	<script src="{% static "main/comment/js/comment.directives.js" %}"></script>
+	<script src="{% static "coding/app/js/coding.app.js" %}"></script>
+	<script src="{% static "coding/app/js/coding.app.config.js" %}"></script>
+	<script src="{% static "coding/app/js/coding.app.controllers.js" %}"></script>
+	<script src="{% static "coding/app/js/coding.codeinstance.directives.js" %}"></script>
+{% endblock %}

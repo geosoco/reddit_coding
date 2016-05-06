@@ -13,14 +13,33 @@ CommentListCtrl.$inject = ['$scope', '$location', 'Comment'];
 
 
 
-function CommentCtrl($scope, Comment) {
+function CommentCtrl($scope, $element, $compile, Comment) {
 	var vm = this;
 
-	console.log("commentctrl");
-	console.dir($scope);
+	vm.expanded = true;
+
+	vm.toggleExpand = function() {
+		vm.expanded = !vm.expanded;
+	}
+
+	vm.onClick = function(ev) {
+
+	}
+/*
+	if(vm.showCodes) {
+		var parent = angular.element($('.code-container', $element)[0]),
+			el = $compile(
+				'<codelist code-instances="comment.codes"></codelist>'
+				)($scope);
+
+			parent.append(el);
+	}
+*/
+
+	//
 
 }
-CommentCtrl.$inject = ['$scope', 'Comment'];
+CommentCtrl.$inject = ['$scope', '$element', '$compile', 'Comment'];
 
 
 angular.module('main.comment')

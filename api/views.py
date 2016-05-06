@@ -46,7 +46,7 @@ class DjangoGroupViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
 
 
-class SubmissionViewSet(viewsets.ModelViewSet):
+class SubmissionViewSet(viewsets.ReadOnlyModelViewSet):
     """
     Viewset for Submission
     """
@@ -57,13 +57,11 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     page_size = 5
     filter_backends = (filters.DjangoFilterBackend,)
-    #filter_class = api_filters.TweetFilter
-    #filter_fields = (
-    #    "user", "in_reply_to_user", "in_reply_to_status_id",
-    #    "created_ts", "retweeted_status",)
+    filter_fields = ("in_set",)
 
 
-class CommentViewSet(viewsets.ModelViewSet):
+
+class CommentViewSet(viewsets.ReadOnlyModelViewSet):
     """
     Viewset for Comment
     """
@@ -73,11 +71,8 @@ class CommentViewSet(viewsets.ModelViewSet):
                               BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)
     page_size = 5
-    #filter_backends = (filters.DjangoFilterBackend,)
-    #filter_class = api_filters.TweetFilter
-    #filter_fields = (
-    #    "user", "in_reply_to_user", "in_reply_to_status_id",
-    #    "created_ts", "retweeted_status",)
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ("root_comment", "article")
 
 
 class CodeSchemeViewSet(viewsets.ModelViewSet):
@@ -118,10 +113,10 @@ class SubmissionCodeInstanceViewSet(viewsets.ModelViewSet):
         current_user = self.request.query_params.get("current_user", None)
         if current_user is not None and current_user.lower() == "true":
             user = self.request.user
-            return coding_models.SubmissionCodeInstanceSerializer.objects.filter(
+            return coding_models.SubmissionCodeInstance.objects.filter(
                 created_by=user.id)
         else:
-            return coding_models.SubmissionCodeInstanceSerializer.objects.all()
+            return coding_models.SubmissionCodeInstance.objects.all()
 
     def create(self, request, *args, **kwargs):
         request.data["created_by"] = request.user.id
@@ -153,15 +148,18 @@ class CommentCodeInstanceViewSet(viewsets.ModelViewSet):
                               BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)
     filter_backends = (filters.DjangoFilterBackend,)
+    filter_class = api_filters.CommentCodeInstanceFilter
 
     def get_queryset(self):
         current_user = self.request.query_params.get("current_user", None)
+        print "a"
         if current_user is not None and current_user.lower() == "true":
             user = self.request.user
-            return coding_models.CommentCodeInstanceSerializer.objects.filter(
+            return coding_models.CommentCodeInstance.objects.filter(
                 created_by=user.id)
         else:
-            return coding_models.CommentCodeInstanceSerializer.objects.all()
+            print "b"
+            return coding_models.CommentCodeInstance.objects.all()
 
     def create(self, request, *args, **kwargs):
         request.data["created_by"] = request.user.id
@@ -204,3 +202,41 @@ class AssignmentViewSet(viewsets.ModelViewSet):
                 "assigned_users")
 
         return qs
+
+
+class CommentThreadViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    Viewset for a top-level comment and all replies.
+
+    XXX: TODO -- this shouldn't return 100 if no root_comment is specified
+    """
+    queryset = main_models.Comment.objects.all()
+    serializer_class = api_serializers.CommentSerializer
+    authentication_classes = (SessionAuthentication,
+                              BasicAuthentication, TokenAuthentication)
+    permission_classes = (IsAuthenticated,)
+    page_size = 100
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ("root_comment",)
+    #filter_class = api_filters.TweetFilter
+    #filter_fields = (
+    #    "user", "in_reply_to_user", "in_reply_to_status_id",
+    #    "created_ts", "retweeted_status",)  
+
+
+class CodedCommentThreadViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    Viewset for a top-level comment and all replies.
+
+    XXX: TODO -- this shouldn't return 100 if no root_comment is specified
+    """
+    queryset = main_models.Comment.objects.all()
+    serializer_class = api_serializers.CommentWithCodesSerializer
+    authentication_classes = (SessionAuthentication,
+                              BasicAuthentication, TokenAuthentication)
+    permission_classes = (IsAuthenticated,)
+    page_size = 100
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ("root_comment",)
+
+

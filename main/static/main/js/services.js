@@ -14,7 +14,35 @@
 
 	function transformSingleGetResponse(data) {
 		var results = angular.fromJson(data);
-		return results.results[0];
+		if(results.hasOwnProperty('results')) {
+			return results.results[0];
+		} else {
+			return results;
+		}
+	}
+
+	function decodeDataString(obj, property) {
+		if(obj && obj.hasOwnProperty('data') && obj.data.hasOwnProperty(property)) {
+			obj.data[property] = he.decode(obj.data[property]);
+		}
+		return obj;
+	}
+
+	function transformSingleComment(data) {
+		return decodeDataString(
+			transformSingleGetResponse(data),
+			"body");
+	}
+
+	function transformComments(data) {
+		var results = angular.fromJson(data);
+		if(results && results.results) {
+			results.results.forEach(function(d){
+				decodeDataString(d,"body");
+			})
+		}
+
+		return results;
 	}
 
 
@@ -24,8 +52,6 @@
 	var basicService = {
 				query: { 
 					method: 'GET',
-					transformResponse: transformGetResponse,
-					isArray: true
 				},
 				update: { method: 'PATCH'},
 				delete: { method: 'DELETE'},
@@ -35,6 +61,14 @@
 					transformResponse: transformSingleGetResponse			
 				}
 			};
+
+	var commentService = angular.extend(
+		{},
+		basicService,
+		{
+			query: { transformResponse: transformComments },
+			get: { transformResponse: transformSingleComment }
+		});
 
 	/*
 	 *
@@ -46,7 +80,7 @@
 	}	 
 
 	function CommentService($resource) {
-		return $resource( "/api/comment/:id/", {id: "@id"}, basicService );
+		return $resource( "/api/comment/:id/", {id: "@id"}, commentService );
 	}
 
 	function SubmissionService($resource) {
@@ -69,18 +103,23 @@
 		return $resource("/api/assignment/:id/", {id: "@id"}, basicService );
 	}
 
+	function CommentThreadService($resource) {
+		return $resource("/api/commentthread/:id/", {id: "@id"}, basicService );
+	}
 
 
 
-	var services = angular.module('main.services', ['ngResource']);
 
-	services.factory("SysUser", SysUserService);
-	services.factory("Comment", CommentService);
-	services.factory("Submission", SubmissionService);
-	services.factory("CodeScheme", CodeSchemeService);
-	services.factory("CommentCodeInstance", CommentCodeInstanceService);
-	services.factory("SubmissionCodeInstance", SubmissionCodeInstanceService);
-	services.factory("Assignment", AssignmentService);
+	
 
+	angular.module('main.services', ['ngResource'])
+		.factory("SysUser", SysUserService)
+		.factory("Comment", CommentService)
+		.factory("Submission", SubmissionService)
+		.factory("CodeScheme", CodeSchemeService)
+		.factory("CommentCodeInstance", CommentCodeInstanceService)
+		.factory("SubmissionCodeInstance", SubmissionCodeInstanceService)
+		.factory("Assignment", AssignmentService)
+		.factory("CommentThread", CommentThreadService);
 
 })();

@@ -1,4 +1,6 @@
-from django.conf.urls import patterns, url
-import main.views as main_views
+from django.conf.urls import url
+import coding.views as coding_views
 
-urlpatterns = []
+urlpatterns = [
+    url(r'^$', coding_views.HomeView.as_view(), name='home'),
+]

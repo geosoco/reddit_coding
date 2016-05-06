@@ -59,14 +59,27 @@ class CommentSerializer(serializers.ModelSerializer):
     id = serializers.CharField()
     created_ut = serializers.IntegerField()
     created_utc = serializers.DateTimeField(allow_null=True)
-    author = serializers.CharField(
-        max_length=24, allow_blank=True, allow_null=True)
+    author = serializers.CharField()
     data = serializers.JSONField()
+    parent_id = serializers.CharField()
+    article = serializers.CharField()
+    num_children = serializers.IntegerField()
+    depth = serializers.IntegerField()
+    root_comment = serializers.CharField()
+    num_descendants = serializers.IntegerField()
+    last_descendant_time_utc = serializers.DateTimeField()
+    last_descendant = serializers.CharField()
+    cumulative_score = serializers.IntegerField()
 
     class Meta:
         model = main_models.Comment
         fields = (
-            'id', 'created_ut', 'created_utc', 'author', 'data')
+            'id', 'created_ut', 'created_utc', 'author', 'data', 'parent_id',
+            'article', 'num_children', 'depth', 'root_comment',
+            'num_descendants', 'last_descendant_time_utc',
+            'last_descendant', 'cumulative_score')
+
+
 
 
 class CodeSerializer(serializers.ModelSerializer):
@@ -103,7 +116,8 @@ class SubmissionCodeInstanceSerializer(serializers.ModelSerializer):
         style={'base_template': 'input.html'})
     assignment = serializers.PrimaryKeyRelatedField(
         queryset=coding_models.Assignment.objects.all(), many=False,
-        style={'base_template': 'input.html'})
+        style={'base_template': 'input.html'},
+        allow_null=True)
 
     class Meta:
         model = coding_models.CommentCodeInstance
@@ -123,7 +137,8 @@ class CommentCodeInstanceSerializer(serializers.ModelSerializer):
         style={'base_template': 'input.html'})
     assignment = serializers.PrimaryKeyRelatedField(
         queryset=coding_models.Assignment.objects.all(), many=False,
-        style={'base_template': 'input.html'})
+        style={'base_template': 'input.html'},
+        allow_null=True)
 
     class Meta:
         model = coding_models.CommentCodeInstance
@@ -131,6 +146,17 @@ class CommentCodeInstanceSerializer(serializers.ModelSerializer):
             'id', 'created_by', 'created_date', 'deleted_by', 'deleted_date',
             'code', 'comment', 'assignment'
             )
+
+
+class CommentWithCodesSerializer(CommentSerializer):
+    commentcodeinstance_set = CommentCodeInstanceSerializer(many=True)
+
+    class Meta(CommentSerializer.Meta):
+        fields = (
+            'id', 'created_ut', 'created_utc', 'author', 'data', 'parent_id',
+            'article', 'num_children', 'depth', 'root_comment',
+            'num_descendants', 'last_descendant_time_utc',
+            'last_descendant', 'cumulative_score', 'commentcodeinstance_set')
 
 
 class AssignmentSerializer(serializers.ModelSerializer):
@@ -151,3 +177,4 @@ class AssignmentSerializer(serializers.ModelSerializer):
             'id', 'name', 'description',
             'coder', 'assigned_users', 'assigned_comments', 'code_schemes'
             )
+

@@ -4,7 +4,7 @@ from api import views
 
 router = routers.DefaultRouter(trailing_slash=True)
 router.register(
-    r'sysusers', views.DjangoUserViewSet, base_name="sysusers")
+    r'sysusers',views.DjangoUserViewSet, base_name="sysusers")
 router.register(
     r'sysgroups', views.DjangoGroupViewSet, base_name="sysgroups")
 router.register(
@@ -21,6 +21,12 @@ router.register(
     base_name="commentcodeinstance")
 router.register(
     r'assignment', views.AssignmentViewSet, base_name="assignment")
+router.register(
+    r'commentthread', views.CommentThreadViewSet, base_name="commentthread")
+router.register(
+    r'codedcommentthread',
+    views.CodedCommentThreadViewSet,
+    base_name="codedcommentthread")
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
