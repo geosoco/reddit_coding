@@ -17,7 +17,8 @@ angular.module('main.comment', [
 	'ui.router',
 	'toastr',
 	'angularSpinner',
-	'main.services'
+	'main.services',
+	'endpoint.factories'
 ]).config(CommentConfig);
 
 

@@ -1,14 +1,18 @@
 'use strict';
 (function(){
 
+
+
 function CodingCodingCtrl(
 		$stateParams,
 		$scope,
 		$rootScope,
 		$anchorScroll,
 		$location,
+		ResourceHelperService,
 		Comment,
-		Submission) {
+		Submission,
+		CommentCodeInstance) {
 	var vm = this;
 
 	vm.test = "Testing!!!!!-";
@@ -28,7 +32,70 @@ function CodingCodingCtrl(
 	vm.commentsList = [];
 	vm.rootComment = {};
 	vm.selectedIndex = 0;
+	vm.codeInstances = [];
 
+
+	/*
+	*
+	*
+	*
+	*/
+	vm.toggleCode = function(code) {
+		if(vm.selectedIndex >= 0) {
+			var comment = getSelectedComment();
+
+			if(comment) {
+				if(code in comment.codeInstances) {
+					// delete
+					deleteCommentCodeInstance(comment.codeInstances[code]);
+				} else {
+					addCommentCodeInstance(comment, code, null);
+				}
+			}
+		} else {
+			// submission
+		}
+	}
+
+
+	function getSelectedComment() {
+		if(vm.selectedIndex >= 0 && 
+				vm.selectedIndex < vm.commentsList.length) {
+			return vm.commentsList[vm.selectedIndex];
+		}
+		return null;
+	}
+
+	function doesCommentHaveCode(comment, codeId) {
+		for(var i = 0; i < comment.codeInstances.length; i++) {
+			//if(comment.codeInstances[i])
+		}
+	}
+
+
+	function addCommentCodeInstance(comment, code, assignment) {
+		var _assignment = assignment || null,
+			ci = new CommentCodeInstance({
+			comment: comment.id,
+			code: code,
+			assignment: _assignment
+		})
+		.$save()
+		.then(function(data){
+			comment.codeInstances.append(data);
+		}, function(error){
+			console.error(error);
+		});
+	}
+
+	function deleteCommentCodeInstance(id) {
+		new CommentCodeInstance({id: id});
+	}
+
+
+	$rootScope.$on("code:toggle", function(event, code){
+		vm.toggleCode(code);
+	})
 
 
 	/*
@@ -57,48 +124,79 @@ function CodingCodingCtrl(
 
 
 	/*
-	* commentsLoaded
-	*
-	* 
-	*/
-	function commentsLoaded(result) {
-		//console.log("commentsLoaded");
-		//console.dir(result);
-
-		if(result.results && result.results.length > 0) {
-			vm.submission = Submission.get({id:result.results[0].article.trim()});
-		}
-
-		// push results into array
-		Array.prototype.push.apply(vm.commentsList, result.results);
-
-		vm.loading_progress.count = vm.commentsList.length;
-		vm.loading_progress.total = result.count;
-
-		if(vm.commentsList.length < result.count) {
-			requestComments(vm.root_comment, vm.commentsList.length, 100);
-		} else {
-			// we're done
-			loadingFinished();
-		}
-	}
-
-	/*
-	* onKeyDown
+	* requestComments
 	*
 	* 
 	*/
 	function requestComments(rootComment, offset, limit) {
-		Comment.query({
-			"root_comment": rootComment,
-			"offset": offset,
-			"limit": limit
-		})
-		.$promise.then(commentsLoaded);
+		return ResourceHelperService.getAll(
+			Comment.query,
+			{
+				"root_comment": rootComment,
+				"offset": offset,
+				"limit": limit
+			}
+		).then(function(result) {
+			vm.commentsList = result;
+			if(vm.commentsList && vm.commentsList.length > 0) {
+				vm.submission_id = vm.commentsList[0].article.trim();
+			}
+		});
+	}
+
+
+	/*
+	* requestSubmission
+	*
+	* 
+	*/
+	function requestSubmission(id) {
+		vm.submission = Submission.get({id:vm.submission_id});
+
+		return vm.submission.$promise;
 	}
 
 	/*
-	* onKeyDown
+	* loadCodeInstances
+	*
+	* 
+	*/
+	function loadCodeInstances() {
+		var idList = vm.commentsList.map(function(d){ return d.id; });
+
+		var req = ResourceHelperService.queryAllInBatched(
+				CommentCodeInstance.query, 
+				{ "offset": 0, "limit": 100 },
+				"comment__id",
+				idList,
+				50
+			);
+
+		req.then(function(result){
+				console.log("loadCodeInstances success");
+				console.dir(result);
+				vm.codeInstances = result;
+			}, function(error) {
+				console.error("loadCodeInstances failed");
+			});
+
+
+		return req;
+	}
+
+	function addCodeInstances(tree_map) {
+		if(vm.codeInstances && vm.codeInstances.length > 0) {
+			vm.codeInstances.forEach(function(d,i){
+				var node = tree_map[d.comment];
+
+				node.codeInstances.push(d);
+			})
+		}
+	}
+
+
+	/*
+	* buildCommentTree
 	*
 	* 
 	*/
@@ -117,6 +215,7 @@ function CodingCodingCtrl(
 		vm.commentsList.forEach(function(d,i) {
 			d.children = [];
 			d.selected = false;
+			d.codeInstances = {};
 
 			tree_map[d.id] = d;
 		});
@@ -141,6 +240,9 @@ function CodingCodingCtrl(
 				root_node = c;
 			}
 		}
+
+		//
+		addCodeInstances(tree_map);
 
 		return root_node;
 	}
@@ -222,7 +324,6 @@ function CodingCodingCtrl(
 		}
 
 		vm.changeSelection(idx);
-
 	}
 
 	/*
@@ -277,6 +378,10 @@ function CodingCodingCtrl(
 		}
 	}
 
+
+
+
+
 	/*
 	* loadingFinished
 	*
@@ -295,8 +400,15 @@ function CodingCodingCtrl(
 	* 
 	*/
 	function init() {
-		// make initial request for comments
-		requestComments(vm.root_comment, 0, 100);
+		// start data requests
+
+		requestComments(vm.root_comment, 0, 100)
+			.then(requestSubmission)
+			.then(loadCodeInstances)
+			.then(loadingFinished)
+			.catch(function(error){
+				console.error("failed to load items!")
+			})
 
 		var $doc = angular.element(document);
 		$doc.on('keydown', vm.onKeyDown);
@@ -317,8 +429,10 @@ CodingCodingCtrl.$inject = [
 	'$rootScope',
 	'$anchorScroll',
 	'$location',
+	'ResourceHelperService',
 	'Comment',
-	'Submission'
+	'Submission',
+	'CommentCodeInstance'
 ];
 
 

@@ -1,0 +1,15 @@
+
+<h3>Codes</h3>
+<form class="form-inline" ng-controller="CodingCodeListCtrl as cclc" ng-submit="cclc.addCode(codeinput)">
+	<div class="input-group">
+		<input type="text" class="form-control" name="code" id="code-name-entry" ng-model="codeinput" placeholder="code name" autocomplete="off">
+		<span class="input-group-btn"><button class="btn btn-primary" type="button" ng-click="cclc.addCode(codeinput)">Add Code</button></span>
+	</div>
+	<div class="code-list well well-sm">
+		<ul class="no-bullets">
+			<li ng-repeat="code in cclc.codes | filter:cclc.filterAny">
+				<a href="#" ng-click="cclc.toggleCode($event,code.id)" data-id="{{code.id}}">{{code.name}}</a>
+			</li>
+		</ul>
+	</div>	
+</form>

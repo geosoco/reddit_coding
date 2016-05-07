@@ -5,16 +5,7 @@
 	Logo
 </div>
 <div id="sidebar-codelist-cntr">
-	<h3>Codes</h3>
-	<form class="form-inline">
-		<div class="form-group">
-			<input type="text" class="form-control" name="code" id="code-name-entry" placeholder="code name">
-			<button class="btn btn-primary">Add Code</button>
-		</div>
-	</form>
 	<div id="codelist-cntr">
-		<ul id="codelist" >
-			<li>Code 1</li>
-		</ul>
+		<div ng-include="'/static/coding/coding/tmpl/coding.code.list.html'"></div>
 	</div>
 </div>

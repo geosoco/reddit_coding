@@ -32,9 +32,9 @@ class TweetFilter(filters.FilterSet):
 
 
 class CommentCodeInstanceFilter(filters.FilterSet):
-
+    #comment = filters.CharFilter(name="comment", lookup_type=["in", "eq"])
+    comment = filters.AllLookupsFilter(name="comment__id")
 
     class Meta:
         model = coding_models.CommentCodeInstance
-        fields = [
-            'created_by', 'code', 'comment', 'assignment']
+        fields = ["comment__id", "comment"]

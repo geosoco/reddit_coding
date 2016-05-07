@@ -89,10 +89,17 @@ class CommentCodeInstance(base_models.FullAuditModel):
     assignment = models.ForeignKey(Assignment, null=True, blank=True)
 
     def __str__(self):
-        return "%s - %d - %s" % (
-            self.assignment.id, self.comment.id, self.code.name)
+        if self.assignment is not None:
+            return "%s - %s - %s" % (
+                self.assignment.id, self.comment.id, self.code.name)
+        else:
+            return "{no assignment} - %s - %s" % (
+                self.comment.id, self.code.name)
 
     def __unicode__(self):
-        return u"%s - %d - %s" % (
-            self.assignment.id, self.comment.id, self.code.name)
-
+        if self.assignment is not None:
+            return u"%s - %s - %s" % (
+                self.assignment.id, self.comment.id, self.code.name)
+        else:
+            return u"{no assignment} - %s - %s" % (
+                self.comment.id, self.code.name)

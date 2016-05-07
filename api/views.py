@@ -2,7 +2,8 @@ from django.contrib.auth.models import User, Group
 from django.utils import timezone
 from django.db.models import Prefetch
 from rest_framework import status
-from rest_framework import filters, viewsets
+from rest_framework import viewsets
+import rest_framework_filters as filters
 from rest_framework.response import Response
 from rest_framework.authentication import (
     SessionAuthentication, BasicAuthentication, TokenAuthentication)
@@ -11,6 +12,45 @@ import api.serializers as api_serializers
 import main.models as main_models
 import coding.models as coding_models
 import filters as api_filters
+from rest_framework_filters import backends
+import rest_framework.filters as rf_filters
+import traceback
+import inspect
+import pdb
+
+
+
+class TestFilter(backends.DjangoFilterBackend):
+    def __init__(self):
+        print ">> creating"
+        print super(TestFilter, self).__init__
+        for base in self.__class__.__bases__:
+            print base.__module__, base.__name__
+        return super(TestFilter, self).__init__()
+
+    def get_filter_class(self, view, queryset=None):
+        print ">> get_filter_class"
+        if queryset:
+            print queryset.query
+        else:
+            print "no queryset"
+        ret = super(TestFilter, self).get_filter_class(view, queryset)
+
+        if queryset:
+            print queryset.query
+        else:
+            print "no queryset"
+
+        print "\n>> got back", ret
+        print "\n>>", ret().get_filters()
+        print "\n>>", ret(view.request.query_params, queryset=queryset).qs
+
+        return ret
+
+    def filter_queryset(self, request, queryset, view):
+        print ">> filter_queryset"
+        return super(TestFilter, self).filter_queryset(
+            request, queryset, view)
 
 
 class DjangoUserViewSet(viewsets.ModelViewSet):
@@ -22,7 +62,7 @@ class DjangoUserViewSet(viewsets.ModelViewSet):
     authentication_classes = (SessionAuthentication,
                               BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = (backends.DjangoFilterBackend,)
     filter_fields = ("id", )
 
     def get_queryset(self):
@@ -56,7 +96,7 @@ class SubmissionViewSet(viewsets.ReadOnlyModelViewSet):
                               BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)
     page_size = 5
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = (backends.DjangoFilterBackend,)
     filter_fields = ("in_set",)
 
 
@@ -71,7 +111,7 @@ class CommentViewSet(viewsets.ReadOnlyModelViewSet):
                               BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)
     page_size = 5
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = (backends.DjangoFilterBackend,)
     filter_fields = ("root_comment", "article")
 
 
@@ -84,7 +124,7 @@ class CodeSchemeViewSet(viewsets.ModelViewSet):
     authentication_classes = (SessionAuthentication,
                               BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = (backends.DjangoFilterBackend,)
 
 
 class CodeViewSet(viewsets.ModelViewSet):
@@ -96,7 +136,7 @@ class CodeViewSet(viewsets.ModelViewSet):
     authentication_classes = (SessionAuthentication,
                               BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = (backends.DjangoFilterBackend,)
 
 
 class SubmissionCodeInstanceViewSet(viewsets.ModelViewSet):
@@ -107,7 +147,7 @@ class SubmissionCodeInstanceViewSet(viewsets.ModelViewSet):
     authentication_classes = (SessionAuthentication,
                               BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = (backends.DjangoFilterBackend,)
 
     def get_queryset(self):
         current_user = self.request.query_params.get("current_user", None)
@@ -147,19 +187,48 @@ class CommentCodeInstanceViewSet(viewsets.ModelViewSet):
     authentication_classes = (SessionAuthentication,
                               BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)
-    filter_backends = (filters.DjangoFilterBackend,)
+    #filter_backends = (TestFilter,)
+    filter_backends = (backends.DjangoFilterBackend,)
     filter_class = api_filters.CommentCodeInstanceFilter
+    #filter_fields = ("id", "comment_id", "comment", "comment__id")
+    queryset = coding_models.CommentCodeInstance.objects.all()
 
     def get_queryset(self):
-        current_user = self.request.query_params.get("current_user", None)
         print "a"
+        queryset = super(CommentCodeInstanceViewSet, self).get_queryset()
+        print self.request.query_params
+        current_user = self.request.query_params.get("current_user", None)
+
         if current_user is not None and current_user.lower() == "true":
             user = self.request.user
-            return coding_models.CommentCodeInstance.objects.filter(
-                created_by=user.id)
+            return queryset.filter(created_by=user.id)
         else:
             print "b"
-            return coding_models.CommentCodeInstance.objects.all()
+            return queryset
+
+    def filter_queryset(self, qs):
+        print "\nfilter before"
+        print qs.query, "\n"
+        print self.request.query_params
+        #print "frame"
+        #curframe = inspect.currentframe()
+        #calframe = inspect.getouterframes(curframe, 2)
+        #print 'caller name:', calframe[1][1], calframe[1][2], calframe[1][3]
+        #print 'caller name:', calframe[2][1], calframe[2][2], calframe[2][3]
+        #print 'caller name:', calframe[3][1], calframe[3][2], calframe[3][3]
+        #print "\nmro"
+        #print type(self).mro(), "\n\n"
+        #print super(CommentCodeInstanceViewSet, self).filter_queryset
+        #print 'base classes'
+        #for base in self.__class__.__bases__:
+        #    print base.__module__, base.__name__
+
+        pdb.set_trace()
+        ret = super(CommentCodeInstanceViewSet, self).filter_queryset(qs)
+        #print "\nafter filter\n"
+        print "1:> ", ret.query, "\n\n"
+        #print "2:> ", ret, "\n\n"
+        return ret
 
     def create(self, request, *args, **kwargs):
         request.data["created_by"] = request.user.id
@@ -180,6 +249,25 @@ class CommentCodeInstanceViewSet(viewsets.ModelViewSet):
             instance.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    """
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        print "++"
+        print queryset.query
+
+        page = self.paginate_queryset(queryset)
+        print "++", page
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        ret = Response(serializer.data)
+        print ret
+        return ret
+    """
+
 
 class AssignmentViewSet(viewsets.ModelViewSet):
     """
@@ -189,7 +277,7 @@ class AssignmentViewSet(viewsets.ModelViewSet):
     authentication_classes = (SessionAuthentication,
                               BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = (backends.DjangoFilterBackend,)
 
     def get_queryset(self):
         current_user = self.request.query_params.get("current_user", None)
@@ -216,7 +304,7 @@ class CommentThreadViewSet(viewsets.ReadOnlyModelViewSet):
                               BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)
     page_size = 100
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = (backends.DjangoFilterBackend,)
     filter_fields = ("root_comment",)
     #filter_class = api_filters.TweetFilter
     #filter_fields = (
@@ -236,7 +324,7 @@ class CodedCommentThreadViewSet(viewsets.ReadOnlyModelViewSet):
                               BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)
     page_size = 100
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = (backends.DjangoFilterBackend,)
     filter_fields = ("root_comment",)
 
 

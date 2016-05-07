@@ -1,5 +1,7 @@
 (function() {
 
+
+
 	/*
 	 * CommentFactory
 	 *
@@ -24,7 +26,6 @@
 				console.dir(error);
 			})
 		}
-
 
 		return self;
 	}

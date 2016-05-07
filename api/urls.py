@@ -4,7 +4,7 @@ from api import views
 
 router = routers.DefaultRouter(trailing_slash=True)
 router.register(
-    r'sysusers',views.DjangoUserViewSet, base_name="sysusers")
+    r'sysusers', views.DjangoUserViewSet, base_name="sysusers")
 router.register(
     r'sysgroups', views.DjangoGroupViewSet, base_name="sysgroups")
 router.register(
