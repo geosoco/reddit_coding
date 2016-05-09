@@ -14,9 +14,6 @@ import coding.models as coding_models
 import filters as api_filters
 from rest_framework_filters import backends
 import rest_framework.filters as rf_filters
-import traceback
-import inspect
-import pdb
 
 
 
@@ -191,44 +188,18 @@ class CommentCodeInstanceViewSet(viewsets.ModelViewSet):
     filter_backends = (backends.DjangoFilterBackend,)
     filter_class = api_filters.CommentCodeInstanceFilter
     #filter_fields = ("id", "comment_id", "comment", "comment__id")
-    queryset = coding_models.CommentCodeInstance.objects.all()
+    queryset = coding_models.CommentCodeInstance.objects.filter(
+        deleted_date__isnull=True)
 
     def get_queryset(self):
-        print "a"
         queryset = super(CommentCodeInstanceViewSet, self).get_queryset()
-        print self.request.query_params
         current_user = self.request.query_params.get("current_user", None)
 
         if current_user is not None and current_user.lower() == "true":
             user = self.request.user
             return queryset.filter(created_by=user.id)
         else:
-            print "b"
             return queryset
-
-    def filter_queryset(self, qs):
-        print "\nfilter before"
-        print qs.query, "\n"
-        print self.request.query_params
-        #print "frame"
-        #curframe = inspect.currentframe()
-        #calframe = inspect.getouterframes(curframe, 2)
-        #print 'caller name:', calframe[1][1], calframe[1][2], calframe[1][3]
-        #print 'caller name:', calframe[2][1], calframe[2][2], calframe[2][3]
-        #print 'caller name:', calframe[3][1], calframe[3][2], calframe[3][3]
-        #print "\nmro"
-        #print type(self).mro(), "\n\n"
-        #print super(CommentCodeInstanceViewSet, self).filter_queryset
-        #print 'base classes'
-        #for base in self.__class__.__bases__:
-        #    print base.__module__, base.__name__
-
-        pdb.set_trace()
-        ret = super(CommentCodeInstanceViewSet, self).filter_queryset(qs)
-        #print "\nafter filter\n"
-        print "1:> ", ret.query, "\n\n"
-        #print "2:> ", ret, "\n\n"
-        return ret
 
     def create(self, request, *args, **kwargs):
         request.data["created_by"] = request.user.id
@@ -242,6 +213,7 @@ class CommentCodeInstanceViewSet(viewsets.ModelViewSet):
             instance.save()
 
     def delete(self, request, pk, format=None):
+        print "delete!!"
         instance = self.get_object(pk)
         if instance is not None:
             instance.deleted_date = timezone.now()

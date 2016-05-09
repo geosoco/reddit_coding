@@ -13,7 +13,7 @@
 					// append code list if necessary
 					var parent = angular.element($('.code-container', el)[0]),
 						codelist = angular.element(
-							'<codelist code-instances="ctrl.comment.codes"></codelist>'
+							'<codeinstancelist code-instances="ctrl.comment.codeInstanceList" comment="ctrl.comment"></codeinstancelist>'
 							);
 
 						parent.append(codelist);

@@ -1,9 +1,9 @@
 
 <h3>Codes</h3>
-<form class="form-inline" ng-controller="CodingCodeListCtrl as cclc" ng-submit="cclc.addCode(codeinput)">
+<form class="form-inline" ng-controller="CodingCodeListCtrl as cclc" ng-submit="cclc.addCode(cclc.codeinput)">
 	<div class="input-group">
-		<input type="text" class="form-control" name="code" id="code-name-entry" ng-model="codeinput" placeholder="code name" autocomplete="off">
-		<span class="input-group-btn"><button class="btn btn-primary" type="button" ng-click="cclc.addCode(codeinput)">Add Code</button></span>
+		<input type="text" class="form-control" name="code" id="code-name-entry" ng-model="cclc.codeinput" placeholder="code name" autocomplete="off">
+		<span class="input-group-btn"><button class="btn btn-primary" type="button" ng-click="cclc.addCode(cclc.codeinput)">Add Code</button></span>
 	</div>
 	<div class="code-list well well-sm">
 		<ul class="no-bullets">

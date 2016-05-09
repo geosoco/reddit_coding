@@ -251,3 +251,36 @@ ul.flat-list > li {
     background-position: 0px -865px;
     background-repeat: no-repeat;
 }
+
+
+
+/*
+ *
+ *
+ *
+ */
+
+.code-instance {
+	border-radius: 4px;
+	background-color: #ccc;
+	padding-left: 5px;
+	position: relative;
+}
+
+.code-instance .close-btn {
+	background: #fff;
+	width: 1em;
+	height: 1em;
+	margin-left: 10px;
+	margin-right: 5px;
+}
+
+
+.code-container {
+	border: 1px solid #eee;
+}
+
+.code-container .code-instance {
+	margin-right: 10px;
+}
+

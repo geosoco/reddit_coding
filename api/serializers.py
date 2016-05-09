@@ -81,7 +81,6 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 
-
 class CodeSerializer(serializers.ModelSerializer):
     scheme = serializers.PrimaryKeyRelatedField(
         queryset=coding_models.CodeScheme.objects.all())
@@ -92,6 +91,13 @@ class CodeSerializer(serializers.ModelSerializer):
             'id', 'created_by', 'created_date', 'deleted_by', 'deleted_date',
             'scheme', 'name', 'description', 'css_class', 'key'
             )
+
+
+class MinimalCodeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = coding_models.Code
+        fields = ('id', 'scheme', 'name', 'css_class')
 
 
 class CodeSchemeSerializer(serializers.ModelSerializer):
@@ -128,9 +134,8 @@ class SubmissionCodeInstanceSerializer(serializers.ModelSerializer):
 
 
 class CommentCodeInstanceSerializer(serializers.ModelSerializer):
-    code = serializers.PrimaryKeyRelatedField(
-        queryset=coding_models.Code.objects.all(), many=False,
-        style={'base_template': 'input.html'})
+    code = MinimalCodeSerializer(
+        many=False, read_only=True)
     comment = serializers.PrimaryKeyRelatedField(
         pk_field=serializers.CharField(),
         queryset=main_models.Comment.objects.all(), many=False,

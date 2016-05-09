@@ -13,6 +13,7 @@ function CodingCodeListCtrl(
 
 	vm.codeSchemes = CodeScheme.query();
 	vm.codes = [];
+	vm.codeinput = "";
 
 
 	vm.codeSchemes.$promise.then(function(data){
@@ -25,7 +26,7 @@ function CodingCodeListCtrl(
 
 	vm.filterAny = function(value, index, array) {
 		if(value && value.name) {
-			return value.name.toLowerCase().indexOf($scope.codeinput) >= 0;	
+			return value.name.toLowerCase().indexOf(vm.codeinput) >= 0;	
 		}
 		return false;
 	}

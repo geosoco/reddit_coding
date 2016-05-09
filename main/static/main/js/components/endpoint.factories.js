@@ -1,6 +1,30 @@
 (function() {
 
 
+	/*
+	 *
+	 *
+	 *
+	 */
+	function CommentModel(Comment) {
+		return function(params) {
+			var self = this;
+
+			self.get = function(id) {
+				var obj = Comment.get({id:id});
+
+				obj.$promise
+					.then(function(data) { self.data = data; })
+					.catch(function(err) { 
+						console.error("Error getting comment");
+						console.dir(error);
+					})
+			}
+		}
+	}
+
+
+
 
 	/*
 	 * CommentFactory

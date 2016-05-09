@@ -58,7 +58,7 @@
 				save: { method: 'POST'},
 				get: { 
 					method: 'GET',
-					transformResponse: transformSingleGetResponse			
+					transformResponse: transformSingleGetResponse
 				}
 			};
 

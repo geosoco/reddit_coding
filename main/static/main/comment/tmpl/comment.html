@@ -1,12 +1,12 @@
 
 
-<div class="comment" ng-class="{collapsed:ctrl.expanded!=true,selected:ctrl.comment.selected==true}" id="{{ctrl.comment.id}}">
+<div class="comment" ng-class="{collapsed:ctrl.expanded!=true,selected:ctrl.data.selected==true}" id="{{ctrl.comment.data.id}}">
 	<div ng-if="ctrl.loading === true">
 		<div class="loading-container col-md-12">
 			<div us-spinner spinner-key="tweet-list" spinner-start-active="true"></div>
 		</div>
 	</div>
-	<div ng-if="ctrl.loading !== true" class="comment-cntr">
+	<div ng-hide="ctrl.loading === true" class="comment-cntr">
 		<div class="vote-box">
 			<div class="arrow up"></div>
 			<div class="arrow down"></div>
@@ -14,14 +14,14 @@
 		<div class="entry">
 			<p class="tagline">
 				<a class="expand" ng-click="ctrl.toggleExpand()"><span ng-switch on="ctrl.expanded"><span ng-switch-when="true">[-]</span><span ng-switch-default>[+]</span></span></a>
-				<a href="https://www.reddit.com/user/{{ctrl.comment.author}}" class="author">{{ctrl.comment.author}}</a>
+				<a href="https://www.reddit.com/user/{{ctrl.comment.data.author}}" class="author">{{ctrl.comment.data.author}}</a>
 				<span class="userattrs"></span>
-				<span class="score unvoted">{{ctrl.comment.data.score}} points</span>
-				<span class="time" title="{{ctrl.comment.created_utc}}" am-time-ago="ctrl.comment.created_utc"></span>
-				<a class="numchildren" ng-click="ctrl.toggleExpand()">({{ctrl.comment.num_children}} children)</a>
+				<span class="score unvoted">{{ctrl.comment.data.data.score}} points</span>
+				<span class="time" title="{{ctrl.comment.data.created_utc}}" am-time-ago="ctrl.comment.data.created_utc"></span>
+				<a class="numchildren" ng-click="ctrl.toggleExpand()">({{ctrl.comment.data.num_children}} children)</a>
 			</p>
 			<div class="usertext-body">
-				<p markdown-to-html="ctrl.comment.data.body"></p>
+				<p markdown-to-html="ctrl.comment.data.data.body"></p>
 			</div>
 			<ul class="flat-list buttons">
 				<li><a>permalink</a></li>
@@ -36,7 +36,7 @@
 	</div>
 	<div class="children">
 		<ul class="comment-replies no-bullets">
-			<li ng-repeat="reply in ctrl.comment.children"><recomment comment="reply" ></recomment></li>
+			<li ng-repeat="reply in ctrl.comment.children"><recomment comment="reply" show-codes="showCodes"></recomment></li>
 		</ul>
 	</div>
 

@@ -12,7 +12,8 @@ function CodingCodingCtrl(
 		ResourceHelperService,
 		Comment,
 		Submission,
-		CommentCodeInstance) {
+		CommentCodeInstance,
+		CodeableCommentModel) {
 	var vm = this;
 
 	vm.test = "Testing!!!!!-";
@@ -30,7 +31,7 @@ function CodingCodingCtrl(
 	//console.dir($scope);
 
 	vm.commentsList = [];
-	vm.rootComment = {};
+	vm.rootComment = new CodeableCommentModel();
 	vm.selectedIndex = 0;
 	vm.codeInstances = [];
 
@@ -47,9 +48,9 @@ function CodingCodingCtrl(
 			if(comment) {
 				if(code in comment.codeInstances) {
 					// delete
-					deleteCommentCodeInstance(comment.codeInstances[code]);
+					//deleteCommentCodeInstance(comment.codeInstances[code]);
 				} else {
-					addCommentCodeInstance(comment, code, null);
+					//addCommentCodeInstance(comment, code, null);
 				}
 			}
 		} else {
@@ -66,34 +67,9 @@ function CodingCodingCtrl(
 		return null;
 	}
 
-	function doesCommentHaveCode(comment, codeId) {
-		for(var i = 0; i < comment.codeInstances.length; i++) {
-			//if(comment.codeInstances[i])
-		}
-	}
-
-
-	function addCommentCodeInstance(comment, code, assignment) {
-		var _assignment = assignment || null,
-			ci = new CommentCodeInstance({
-			comment: comment.id,
-			code: code,
-			assignment: _assignment
-		})
-		.$save()
-		.then(function(data){
-			comment.codeInstances.append(data);
-		}, function(error){
-			console.error(error);
-		});
-	}
-
-	function deleteCommentCodeInstance(id) {
-		new CommentCodeInstance({id: id});
-	}
-
 
 	$rootScope.$on("code:toggle", function(event, code){
+		console.log("toggleCode");
 		vm.toggleCode(code);
 	})
 
@@ -137,9 +113,9 @@ function CodingCodingCtrl(
 				"limit": limit
 			}
 		).then(function(result) {
-			vm.commentsList = result;
+			vm.commentsList = result.map(function(d){ return new CodeableCommentModel({obj: d})});
 			if(vm.commentsList && vm.commentsList.length > 0) {
-				vm.submission_id = vm.commentsList[0].article.trim();
+				vm.submission_id = vm.commentsList[0].data.article;
 			}
 		});
 	}
@@ -162,12 +138,12 @@ function CodingCodingCtrl(
 	* 
 	*/
 	function loadCodeInstances() {
-		var idList = vm.commentsList.map(function(d){ return d.id; });
+		var idList = vm.commentsList.map(function(d){ return d.data.id; });
 
 		var req = ResourceHelperService.queryAllInBatched(
 				CommentCodeInstance.query, 
 				{ "offset": 0, "limit": 100 },
-				"comment__id",
+				"comment",
 				idList,
 				50
 			);
@@ -189,7 +165,7 @@ function CodingCodingCtrl(
 			vm.codeInstances.forEach(function(d,i){
 				var node = tree_map[d.comment];
 
-				node.codeInstances.push(d);
+				node.codeInstanceList.addExistingInstance(d);
 			})
 		}
 	}
@@ -213,30 +189,30 @@ function CodingCodingCtrl(
 
 		// build up tree map
 		vm.commentsList.forEach(function(d,i) {
-			d.children = [];
+			//d.children = [];
 			d.selected = false;
-			d.codeInstances = {};
+			//d.codeInstances = {instances: [], control: null};
 
-			tree_map[d.id] = d;
+			tree_map[d.data.id] = d;
 		});
 
 
 		while(vm.commentsList.length > 0) {
 			var c = vm.commentsList.pop(),
-				parentId = c.parent_id;
+				parentId = c.data.parent_id;
 
 			// add 
-			if(parentId !== null && parentId !== undefined && parentId != c.article) {
+			if(parentId !== null && parentId !== undefined && parentId != c.data.article) {
 				parent = tree_map[parentId];
 				if(parent.hasOwnProperty("children") === false) {
 					console.error("!!! children undefined");
 					console.dir(parent);
 				}
-				parent.children.unshift(c);
+				parent.addChild(c);
 			}
 
 			// check for root node
-			if(c.id === c.root_comment) {
+			if(c.data.id === vm.root_comment) {
 				root_node = c;
 			}
 		}
@@ -432,7 +408,8 @@ CodingCodingCtrl.$inject = [
 	'ResourceHelperService',
 	'Comment',
 	'Submission',
-	'CommentCodeInstance'
+	'CommentCodeInstance',
+	'CodeableCommentModel'
 ];
 
 
@@ -448,16 +425,97 @@ function CodingMainContentCtrl($scope) {
 CodingMainContentCtrl.$inject = ['$scope'];
 
 
-function CommentCodeInstanceCtrl($scope, CommentCodeInstance) {
+function CommentCodeInstanceListCtrl($scope, CommentCodeInstance, CodeableCommentModel) {
+	//console.log("CodeInstanceListCtrl!!");
+	//console.dir($scope);
+	//console.dir(this);
 
+	var vm = this;
+
+	vm.data = 0;
+
+	//vm.codeInstances.control = vm;
+
+	vm.test = new CodeableCommentModel({test: 0});
+
+	function findInstanceById(id) {
+		vm.codeInstances.forEach(function(d,i){
+			if(d.id == id) {
+				return d;
+			}
+		});
+
+		return null;
+	}
+
+	function addCommentCodeInstance(comment, code, assignment) {
+		var _assignment = assignment || null,
+			ci = new CommentCodeInstance({
+			comment: comment.id,
+			code: code,
+			assignment: _assignment
+		})
+		.$save()
+		.then(function(data){
+			comment.codeInstanceList.addExistingInstance(data);
+		}, function(error){
+			console.error(error);
+		});
+	}
+
+	vm.removeCode = function($event, instance) {
+		console.log("CCILC removeCode");
+		console.dir(instance);
+
+		if(instance in vm.codeInstances) {
+			delete vm.codeInstances[instance];
+		}
+		
+/*
+		CommentCodeInstance.delete({id: vm.instance.id}).$promise.then(function(data){
+			console.log("delete successful");
+			console.dir("data");
+		}, function(error) {
+			console.error("Error deleting code");
+			console.dir(error);
+		});
+*/
+	}
+}
+CommentCodeInstanceListCtrl.$inject = ['$scope', 'CommentCodeInstance', 'CodeableCommentModel'];
+
+
+function CommentCodeInstanceCtrl($scope, CommentCodeInstance) {
+	var vm = this;
+
+	vm.clickTest = function($event, codeid) {
+		console.log("clicktest");
+		console.dir($event)
+		console.dir(codeid);
+	}
+
+	/*
+	vm.removeCode = function($event) {
+		console.log("removing :" + vm.instance.id);
+		console.dir(this);
+		console.dir($scope);
+
+		CommentCodeInstance.delete({id: vm.instance.id}).$promise.then(function(data){
+			console.log("delete successful");
+			console.dir("data");
+		}, function(error) {
+			console.error("Error deleting code");
+			console.dir(error);
+		});
+	}*/
 }
 CommentCodeInstanceCtrl.$inject = ['$scope', 'CommentCodeInstance'];
 
 
-function SubmissiomCodeInstanceCtrl($scope, SubmissiomCodeInstance) {
+function SubmissionCodeInstanceCtrl($scope, SubmissionCodeInstance) {
 
 }
-SubmissiomCodeInstanceCtrl.$inject = ['$scope', 'SubmissiomCodeInstance'];
+SubmissionCodeInstanceCtrl.$inject = ['$scope', 'SubmissionCodeInstance'];
 
 
 angular.module('coding.coding')
@@ -465,7 +523,8 @@ angular.module('coding.coding')
 	.controller('CodingSidebarCtrl', CodingSidebarCtrl)
 	.controller('CodingMainContentCtrl', CodingMainContentCtrl)
 	.controller('CommentCodeInstanceCtrl', CommentCodeInstanceCtrl)
-	.controller('SubmissiomCodeInstanceCtrl', SubmissiomCodeInstanceCtrl)
+	.controller('SubmissionCodeInstanceCtrl', SubmissionCodeInstanceCtrl)
+	.controller('CommentCodeInstanceListCtrl', CommentCodeInstanceListCtrl)
 
 
 })();
