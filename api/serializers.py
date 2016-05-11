@@ -133,6 +133,29 @@ class SubmissionCodeInstanceSerializer(serializers.ModelSerializer):
             )
 
 
+class CommentCodeInstanceWriteSerializer(serializers.ModelSerializer):
+    code = MinimalCodeSerializer(
+        many=False, read_only=True)    
+    code_id = serializers.PrimaryKeyRelatedField(
+        queryset=coding_models.Code.objects.all(),
+        many=False, source="code")
+    comment = serializers.PrimaryKeyRelatedField(
+        pk_field=serializers.CharField(),
+        queryset=main_models.Comment.objects.all(), many=False,
+        style={'base_template': 'input.html'})
+    assignment = serializers.PrimaryKeyRelatedField(
+        queryset=coding_models.Assignment.objects.all(), many=False,
+        style={'base_template': 'input.html'},
+        allow_null=True)
+
+    class Meta:
+        model = coding_models.CommentCodeInstance
+        fields = (
+            'id', 'created_by', 'created_date', 'deleted_by', 'deleted_date',
+            'code', 'code_id', 'comment', 'assignment'
+            )
+
+
 class CommentCodeInstanceSerializer(serializers.ModelSerializer):
     code = MinimalCodeSerializer(
         many=False, read_only=True)
@@ -151,6 +174,7 @@ class CommentCodeInstanceSerializer(serializers.ModelSerializer):
             'id', 'created_by', 'created_date', 'deleted_by', 'deleted_date',
             'code', 'comment', 'assignment'
             )
+
 
 
 class CommentWithCodesSerializer(CommentSerializer):

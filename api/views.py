@@ -180,7 +180,7 @@ class CommentCodeInstanceViewSet(viewsets.ModelViewSet):
     """
     Viewset for Tweet code instance
     """
-    serializer_class = api_serializers.CommentCodeInstanceSerializer
+    serializer_class = api_serializers.CommentCodeInstanceWriteSerializer
     authentication_classes = (SessionAuthentication,
                               BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)
@@ -201,7 +201,14 @@ class CommentCodeInstanceViewSet(viewsets.ModelViewSet):
         else:
             return queryset
 
+#    def get_serializer_class(self):
+#        if self.action == 'get':
+#            return api_serializers.CommentCodeInstanceSerializer
+#        else:
+# return api_serializers.CommentCodeInstanceWriteSerializer
+
     def create(self, request, *args, **kwargs):
+        print "create"
         request.data["created_by"] = request.user.id
         return super(CommentCodeInstanceViewSet, self).create(
             request, *args, **kwargs)

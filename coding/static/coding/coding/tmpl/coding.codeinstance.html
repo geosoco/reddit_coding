@@ -1,1 +1,1 @@
-<span class="code-instance {{ccic.instance.code.css_class}}" data-id="ccic.instance.id">{{ccic.instance.code.name}}<a class="close-btn" ng-click="ccic.removeCode()">&times;</a></span>
+<span class="code-instance {{ccic.instance.code.css_class}}" data-id="{{ccic.instance.data.id}}" ng-class="{'pending': ccic.instance.data.id < 0}">{{ccic.instance.code.name}}<a class="close-btn" ng-click="ccic.removeCode()">&times;</a></span>

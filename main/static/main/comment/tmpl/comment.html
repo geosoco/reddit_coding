@@ -1,6 +1,4 @@
-
-
-<div class="comment" ng-class="{collapsed:ctrl.expanded!=true,selected:ctrl.data.selected==true}" id="{{ctrl.comment.data.id}}">
+<div class="comment" ng-class="{collapsed:ctrl.expanded!=true,selected:ctrl.comment.selected==true}" id="{{ctrl.comment.data.id}}">
 	<div ng-if="ctrl.loading === true">
 		<div class="loading-container col-md-12">
 			<div us-spinner spinner-key="tweet-list" spinner-start-active="true"></div>

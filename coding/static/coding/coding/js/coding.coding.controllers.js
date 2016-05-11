@@ -16,16 +16,14 @@ function CodingCodingCtrl(
 		CodeableCommentModel) {
 	var vm = this;
 
-	vm.test = "Testing!!!!!-";
 
 	vm.submission = null;
-	vm.root_comment = $stateParams.id,
+	vm.rootCommentId = $stateParams.id,
 	vm.loading_progress = {
 		count: null,
 		total: null
 	}
 
-	console.log("codinghomectrl !");
 
 	//console.dir(this);
 	//console.dir($scope);
@@ -45,14 +43,7 @@ function CodingCodingCtrl(
 		if(vm.selectedIndex >= 0) {
 			var comment = getSelectedComment();
 
-			if(comment) {
-				if(code in comment.codeInstances) {
-					// delete
-					//deleteCommentCodeInstance(comment.codeInstances[code]);
-				} else {
-					//addCommentCodeInstance(comment, code, null);
-				}
-			}
+			comment.codeInstanceList.toggleCode(comment.data.id, code)
 		} else {
 			// submission
 		}
@@ -100,28 +91,6 @@ function CodingCodingCtrl(
 
 
 	/*
-	* requestComments
-	*
-	* 
-	*/
-	function requestComments(rootComment, offset, limit) {
-		return ResourceHelperService.getAll(
-			Comment.query,
-			{
-				"root_comment": rootComment,
-				"offset": offset,
-				"limit": limit
-			}
-		).then(function(result) {
-			vm.commentsList = result.map(function(d){ return new CodeableCommentModel({obj: d})});
-			if(vm.commentsList && vm.commentsList.length > 0) {
-				vm.submission_id = vm.commentsList[0].data.article;
-			}
-		});
-	}
-
-
-	/*
 	* requestSubmission
 	*
 	* 
@@ -132,118 +101,6 @@ function CodingCodingCtrl(
 		return vm.submission.$promise;
 	}
 
-	/*
-	* loadCodeInstances
-	*
-	* 
-	*/
-	function loadCodeInstances() {
-		var idList = vm.commentsList.map(function(d){ return d.data.id; });
-
-		var req = ResourceHelperService.queryAllInBatched(
-				CommentCodeInstance.query, 
-				{ "offset": 0, "limit": 100 },
-				"comment",
-				idList,
-				50
-			);
-
-		req.then(function(result){
-				console.log("loadCodeInstances success");
-				console.dir(result);
-				vm.codeInstances = result;
-			}, function(error) {
-				console.error("loadCodeInstances failed");
-			});
-
-
-		return req;
-	}
-
-	function addCodeInstances(tree_map) {
-		if(vm.codeInstances && vm.codeInstances.length > 0) {
-			vm.codeInstances.forEach(function(d,i){
-				var node = tree_map[d.comment];
-
-				node.codeInstanceList.addExistingInstance(d);
-			})
-		}
-	}
-
-
-	/*
-	* buildCommentTree
-	*
-	* 
-	*/
-	function buildCommentTree() {
-		var root_node = {}, 
-			tree_map = {};
-
-		// sort the list first
-		vm.commentsList.sort(function(a,b){
-			if(a.id < b.id) { return -1; }
-			else if(a.id > b.id) { return 1; }
-			return 0;
-		})
-
-		// build up tree map
-		vm.commentsList.forEach(function(d,i) {
-			//d.children = [];
-			d.selected = false;
-			//d.codeInstances = {instances: [], control: null};
-
-			tree_map[d.data.id] = d;
-		});
-
-
-		while(vm.commentsList.length > 0) {
-			var c = vm.commentsList.pop(),
-				parentId = c.data.parent_id;
-
-			// add 
-			if(parentId !== null && parentId !== undefined && parentId != c.data.article) {
-				parent = tree_map[parentId];
-				if(parent.hasOwnProperty("children") === false) {
-					console.error("!!! children undefined");
-					console.dir(parent);
-				}
-				parent.addChild(c);
-			}
-
-			// check for root node
-			if(c.data.id === vm.root_comment) {
-				root_node = c;
-			}
-		}
-
-		//
-		addCodeInstances(tree_map);
-
-		return root_node;
-	}
-
-	/*
-	* pushTreeNode
-	*
-	* 
-	*/
-	function pushTreeNode(node) {
-		vm.commentsList.push(node);
-		// step through children
-		node.children.forEach(function(d){
-			pushTreeNode(d);
-		})
-	}
-
-	/*
-	* buildCommentListFromTree
-	*
-	* 
-	*/
-	function buildCommentListFromTree() {
-		pushTreeNode(vm.rootComment);
-	}
 
 	/*
 	* setSelection
@@ -256,7 +113,7 @@ function CodingCodingCtrl(
 			return vm.submission.id;
 		} else if(vm.commentsList && vm.commentsList.length > idx) {
 			vm.commentsList[idx].selected = value;
-			return vm.commentsList[idx].id;
+			return vm.commentsList[idx].data.id;
 		}
 	}
 
@@ -292,7 +149,7 @@ function CodingCodingCtrl(
 		} else {
 			// try to find the id
 			for(var i = 0; i < vm.commentsList.length; i++) {
-				if(vm.commentsList[i].id == id) {
+				if(vm.commentsList[i].data.id == id) {
 					idx = i;
 					break;
 				}
@@ -328,17 +185,63 @@ function CodingCodingCtrl(
 		//vm.selectId(id);
 	}
 
+
+	function getNext(node) {
+		if(node.children.length > 0) {
+			return node.children[0];
+		}
+
+		if(node.nextSibling != null) {
+			return node.nextSibling;
+		}
+
+		// find next parent
+		while(node.parent != null) {
+			if(node.parent != null && node.parent.nextSibling != null) {
+				return node.parent.nextSibling;
+			}
+			// step up again
+			node = node.parent;
+		}
+
+		return null;
+	}
+
+	function getPrevious(node) {
+		if(node.prevSibling != null) {
+			// move to previous node
+			node = node.prevSibling;
+
+			// if there are children, walk downwards until we find a leaf
+			while(node.children.length > 0) {
+				node = node.children[node.children.length-1];
+			}
+			return node;
+		}
+
+		// find next parent
+		if(node.parent != null) {
+			// step up again
+			return node.parent;
+		}
+
+		// we didn't find one
+		return null;
+	}
+
 	/*
 	* selectNext
 	*
 	* 
 	*/
 	vm.selectNext = function() {
-		if(vm.commentsList && vm.commentsList.length) {
-			if(vm.selectedIndex +1 < vm.commentsList.length) {
-				vm.changeSelection(vm.selectedIndex+1);
-			}
+		var curNode = vm.commentsList[vm.selectedIndex];
+		var nextNode = getNext(curNode);
+
+		if(nextNode) {
+			vm.selectId(nextNode.data.id);
 		}
+
 	}
 
 	/*
@@ -347,13 +250,13 @@ function CodingCodingCtrl(
 	* 
 	*/
 	vm.selectPrevious = function() {
-		if(vm.commentsList && vm.commentsList.length) {
-			if(vm.selectedIndex > -1) {
-				vm.changeSelection(vm.selectedIndex-1);
-			}
+		var curNode = vm.commentsList[vm.selectedIndex];
+		var prevNode = getPrevious(curNode);
+
+		if(prevNode) {
+			vm.selectId(prevNode.data.id);
 		}
 	}
-
 
 
 
@@ -370,6 +273,9 @@ function CodingCodingCtrl(
 	}
 	
 
+
+
+
 	/*
 	* init
 	*
@@ -378,12 +284,19 @@ function CodingCodingCtrl(
 	function init() {
 		// start data requests
 
-		requestComments(vm.root_comment, 0, 100)
-			.then(requestSubmission)
-			.then(loadCodeInstances)
-			.then(loadingFinished)
+		vm.rootComment.getEntireThread(vm.rootCommentId)
+			.then(function(data) {
+				vm.commentsList = vm.rootComment.commentsList;
+				if(vm.commentsList && vm.commentsList.length > 0) {
+					vm.submission_id = vm.commentsList[0].data.article;
+					return requestSubmission();
+				}
+				return data;
+			}).then(function(data){
+				vm.changeSelection(0,true);
+			})
 			.catch(function(error){
-				console.error("failed to load items!")
+				console.error("failed to load items: " + error);
 			})
 
 		var $doc = angular.element(document);
@@ -451,7 +364,7 @@ function CommentCodeInstanceListCtrl($scope, CommentCodeInstance, CodeableCommen
 	function addCommentCodeInstance(comment, code, assignment) {
 		var _assignment = assignment || null,
 			ci = new CommentCodeInstance({
-			comment: comment.id,
+			comment: comment.data.id,
 			code: code,
 			assignment: _assignment
 		})
@@ -467,19 +380,7 @@ function CommentCodeInstanceListCtrl($scope, CommentCodeInstance, CodeableCommen
 		console.log("CCILC removeCode");
 		console.dir(instance);
 
-		if(instance in vm.codeInstances) {
-			delete vm.codeInstances[instance];
-		}
-		
-/*
-		CommentCodeInstance.delete({id: vm.instance.id}).$promise.then(function(data){
-			console.log("delete successful");
-			console.dir("data");
-		}, function(error) {
-			console.error("Error deleting code");
-			console.dir(error);
-		});
-*/
+		vm.codeInstances.deleteInstance(instance);
 	}
 }
 CommentCodeInstanceListCtrl.$inject = ['$scope', 'CommentCodeInstance', 'CodeableCommentModel'];

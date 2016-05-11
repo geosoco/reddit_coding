@@ -267,6 +267,10 @@ ul.flat-list > li {
 	position: relative;
 }
 
+.code-instance.pending {
+	opacity: 0.4;
+}
+
 .code-instance .close-btn {
 	background: #fff;
 	width: 1em;
