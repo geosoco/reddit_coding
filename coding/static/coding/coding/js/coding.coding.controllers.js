@@ -2,7 +2,28 @@
 (function(){
 
 
+angular.module('coding.coding')
+	.controller('CodingCodingCtrl', CodingCodingCtrl)
+	.controller('CodingSidebarCtrl', CodingSidebarCtrl)
+	.controller('CodingMainContentCtrl', CodingMainContentCtrl)
+	.controller('CommentCodeInstanceCtrl', CommentCodeInstanceCtrl)
+	.controller('SubmissionCodeInstanceCtrl', SubmissionCodeInstanceCtrl)
+	.controller('CommentCodeInstanceListCtrl', CommentCodeInstanceListCtrl);
 
+
+
+CodingCodingCtrl.$inject = [
+	'$stateParams',
+	'$scope',
+	'$rootScope',
+	'$anchorScroll',
+	'$location',
+	'ResourceHelperService',
+	'Comment',
+	'Submission',
+	'CommentCodeInstance',
+	'CodeableCommentModel'
+];
 function CodingCodingCtrl(
 		$stateParams,
 		$scope,
@@ -312,32 +333,24 @@ function CodingCodingCtrl(
 	init();
 
 }
-CodingCodingCtrl.$inject = [
-	'$stateParams',
-	'$scope',
-	'$rootScope',
-	'$anchorScroll',
-	'$location',
-	'ResourceHelperService',
-	'Comment',
-	'Submission',
-	'CommentCodeInstance',
-	'CodeableCommentModel'
-];
 
 
+
+CodingSidebarCtrl.$inject = ['$scope'];
 function CodingSidebarCtrl($scope) {
 	console.log("CodingSidebar!");
 }
-CodingSidebarCtrl.$inject = ['$scope'];
 
 
+
+CodingMainContentCtrl.$inject = ['$scope'];
 function CodingMainContentCtrl($scope) {
 	console.log("CodingMainContent!");
 }
-CodingMainContentCtrl.$inject = ['$scope'];
 
 
+
+CommentCodeInstanceListCtrl.$inject = ['$scope', 'CommentCodeInstance', 'CodeableCommentModel'];
 function CommentCodeInstanceListCtrl($scope, CommentCodeInstance, CodeableCommentModel) {
 	//console.log("CodeInstanceListCtrl!!");
 	//console.dir($scope);
@@ -383,9 +396,10 @@ function CommentCodeInstanceListCtrl($scope, CommentCodeInstance, CodeableCommen
 		vm.codeInstances.deleteInstance(instance);
 	}
 }
-CommentCodeInstanceListCtrl.$inject = ['$scope', 'CommentCodeInstance', 'CodeableCommentModel'];
 
 
+
+CommentCodeInstanceCtrl.$inject = ['$scope', 'CommentCodeInstance'];
 function CommentCodeInstanceCtrl($scope, CommentCodeInstance) {
 	var vm = this;
 
@@ -394,38 +408,14 @@ function CommentCodeInstanceCtrl($scope, CommentCodeInstance) {
 		console.dir($event)
 		console.dir(codeid);
 	}
-
-	/*
-	vm.removeCode = function($event) {
-		console.log("removing :" + vm.instance.id);
-		console.dir(this);
-		console.dir($scope);
-
-		CommentCodeInstance.delete({id: vm.instance.id}).$promise.then(function(data){
-			console.log("delete successful");
-			console.dir("data");
-		}, function(error) {
-			console.error("Error deleting code");
-			console.dir(error);
-		});
-	}*/
 }
-CommentCodeInstanceCtrl.$inject = ['$scope', 'CommentCodeInstance'];
 
 
+
+SubmissionCodeInstanceCtrl.$inject = ['$scope', 'SubmissionCodeInstance'];
 function SubmissionCodeInstanceCtrl($scope, SubmissionCodeInstance) {
 
 }
-SubmissionCodeInstanceCtrl.$inject = ['$scope', 'SubmissionCodeInstance'];
-
-
-angular.module('coding.coding')
-	.controller('CodingCodingCtrl', CodingCodingCtrl)
-	.controller('CodingSidebarCtrl', CodingSidebarCtrl)
-	.controller('CodingMainContentCtrl', CodingMainContentCtrl)
-	.controller('CommentCodeInstanceCtrl', CommentCodeInstanceCtrl)
-	.controller('SubmissionCodeInstanceCtrl', SubmissionCodeInstanceCtrl)
-	.controller('CommentCodeInstanceListCtrl', CommentCodeInstanceListCtrl)
 
 
 })();

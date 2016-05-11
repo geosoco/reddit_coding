@@ -1,6 +1,27 @@
-'use string';
 (function(){
-	
+	'use strict';
+
+	angular
+		.module('coding.coding', [
+			'ngAnimate',
+			'ngResource',
+			'ui.router',
+			'toastr',
+			'angularSpinner',
+			'main.services',
+			'main.submission',
+			'main.comment',
+			'coding.home',
+			'angularMoment',
+			'ng-showdown'
+		])
+		.config(CodingCodingConfig);
+
+
+
+	CodingCodingConfig.$inject = [
+		'$stateProvider'
+	];
 	function CodingCodingConfig($stateProvider) {
 		// temporary state provider stuff
 		$stateProvider
@@ -23,26 +44,5 @@
 			})
 
 	}
-
-	CodingCodingConfig.$inject = [
-		'$stateProvider'
-	];
-
-
-	angular
-		.module('coding.coding', [
-			'ngAnimate',
-			'ngResource',
-			'ui.router',
-			'toastr',
-			'angularSpinner',
-			'main.services',
-			'main.submission',
-			'main.comment',
-			'coding.home',
-			'angularMoment',
-			'ng-showdown'
-		])
-		.config(CodingCodingConfig);
 
 })();

@@ -1,13 +1,16 @@
-'use strict';
 (function(){
-
-function CodingHomeCtrl($scope, $location) {
-	console.log("codinghomectrl !");
-}
-CodingHomeCtrl.$inject = ['$scope', '$location'];
-
+'use strict';
 
 angular.module('coding.home')
 	.controller('CodingHomeCtrl', CodingHomeCtrl);
+
+
+CodingHomeCtrl.$inject = ['$scope', '$location'];
+function CodingHomeCtrl($scope, $location, SysUser, Assignment) {
+	
+}
+
+
+
 
 })();
