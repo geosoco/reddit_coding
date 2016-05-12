@@ -252,21 +252,28 @@ class AssignmentViewSet(viewsets.ModelViewSet):
     """
     Viewset for assignment
     """
-    serializer_class = api_serializers.AssignmentSerializer
+    #serializer_class = api_serializers.AssignmentSerializer
     authentication_classes = (SessionAuthentication,
                               BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated,)
     filter_backends = (backends.DjangoFilterBackend,)
+
+    def get_serializer_class(self):
+        if self.action == 'get':
+            return api_serializers.AssignmentSerializer
+        
+        return api_serializers.AssignmentSimpleSerializer
 
     def get_queryset(self):
         current_user = self.request.query_params.get("current_user", None)
         if current_user is not None and current_user.lower() == "true":
             user = self.request.user
             qs = coding_models.Assignment.objects.filter(coder=user.id)
-            qs = qs.prefetch_related("assigned_users")
         else:
-            qs = coding_models.Assignment.objects.all().prefetch_related(
-                "assigned_users")
+            qs = coding_models.Assignment.objects.all()
+
+        if self.action == 'get':
+            qs = qs.prefetch_related("assigned_comments")
 
         return qs
 

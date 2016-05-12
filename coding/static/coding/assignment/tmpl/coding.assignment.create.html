@@ -1,0 +1,64 @@
+<div class="content">
+<form>
+	<div class="formgroup" ng-class="{'has-error': acctrl.fieldHasError('name')}">
+		<label for="name" class="control-label">Name</label>
+		<input class="form-control"  type="text" ng-model="acctrl.assignment.name" placeholder="Assignment Name" id="name">
+		<div ng-show="acctrl.fieldHasError('name')" class="alert alert-danger" role="alert">
+			<ul>
+				<li ng-repeat="err in acctrl.errors.name">{{err}}</li>
+			</ul>
+		</div>		
+	</div>
+	<div class="formgroup" ng-class="{'has-error': acctrl.fieldHasError('description')}">
+		<label for="description" class="control-label">Description</label>	
+		<textarea  class="form-control"  type="text" ng-model="acctrl.assignment.description" placeholder="Assignment Name" id="description"></textarea>
+		<div ng-show="acctrl.fieldHasError('description')" class="alert alert-danger" role="alert">
+			<ul>
+				<li ng-repeat="err in acctrl.errors.description">{{err}}</li>
+			</ul>
+		</div>		
+	</div>
+	<div class="formgroup" ng-class="{'has-error': acctrl.fieldHasError('code_schemes')}">
+		<label for="codescheme" class="control-label">Code Scheme</label>
+		<select class="form-control"  name="codescheme" id="codescheme" multiple ng-model="acctrl.assignment.code_schemes">
+			<option value="{{cs.id}}" ng-repeat="cs in acctrl.codeSchemes.results">{{cs.name}}</option>
+		</select>
+		<div ng-show="acctrl.fieldHasError('code_schemes')" class="alert alert-danger" role="alert">
+			<ul>
+				<li ng-repeat="err in acctrl.errors.code_schemes">{{err}}</li>
+			</ul>
+		</div>		
+	</div>
+	<div class="formgroup" ng-class="{'has-error': acctrl.fieldHasError('coder')}">
+		<label for="user" class="control-label">Assigned Users</label>
+		<select class="form-control"  name="user" id="user" ng-model="acctrl.assignment.coder">
+			<option value="{{u.id}}" ng-repeat="u in acctrl.users.results">{{u.username}}</option>
+		</select>
+		<div ng-show="acctrl.fieldHasError('assigned_comments')" class="alert alert-danger" role="alert">
+			<ul>
+				<li ng-repeat="err in acctrl.errors.assigned_comments">{{err}}</li>
+			</ul>
+		</div>		
+	</div>
+	<div class="formgroup" ng-class="{'has-error': acctrl.fieldHasError('assigned_comments')}">
+		<label for="assigned-comments" class="control-label">Assigned Comments</label>
+
+		<textarea class="form-control"  id="assigned-comments" placeholder="comma or newline separated list of ids" ng-model="acctrl.assignment.assigned_comments"></textarea>
+
+		<div ng-show="acctrl.fieldHasError('assigned_comments')" class="alert alert-danger" role="alert">
+			<ul>
+				<li ng-repeat="err in acctrl.errors.assigned_comments">{{err}}</li>
+			</ul>
+		</div>		
+	</div>
+	<div>
+		<button type="submit" ng-click="acctrl.submit($event)" class="btn btn-default">Submit</button>
+	</div>
+	<div ng-show="acctrl.success != null" class="alert alert-success" role="alert">
+		Assignment created successfully!
+	</div>
+</form>
+<pre>
+{{acctrl.assignment|json}}
+</pre>
+</div>

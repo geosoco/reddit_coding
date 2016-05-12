@@ -1,6 +1,5 @@
-'use strict';
 (function(){
-
+'use strict';
 
 angular.module('coding.coding')
 	.controller('CodingCodingCtrl', CodingCodingCtrl)

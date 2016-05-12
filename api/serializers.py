@@ -190,12 +190,13 @@ class CommentWithCodesSerializer(CommentSerializer):
 
 class AssignmentSerializer(serializers.ModelSerializer):
     coder = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.all(), many=False)
+        queryset=User.objects.all(),
+        many=False)
     assigned_submissions = SubmissionSerializer(
-        many=True,
+        many=True, allow_empty=True,
         style={'base_template': 'input.html'})
     assigned_comments = CommentSerializer(
-        many=True,
+        many=True, allow_empty=True,
         style={'base_template': 'input.html'})
     code_schemes = CodeSchemeSerializer(many=True)
 
@@ -204,6 +205,34 @@ class AssignmentSerializer(serializers.ModelSerializer):
         fields = (
             'created_by', 'created_date', 'deleted_by', 'deleted_date',
             'id', 'name', 'description',
-            'coder', 'assigned_users', 'assigned_comments', 'code_schemes'
+            'coder', 'assigned_submissions', 'assigned_comments',
+            'code_schemes'
+            )
+
+
+class AssignmentSimpleSerializer(serializers.ModelSerializer):
+    coder = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(),
+        many=False)
+    assigned_submissions = serializers.PrimaryKeyRelatedField(
+        queryset=main_models.Submission.objects.all(),
+        many=True,
+        allow_empty=True)
+    assigned_comments = serializers.PrimaryKeyRelatedField(
+        queryset=main_models.Comment.objects.all(),
+        many=True,
+        allow_empty=True)
+
+    code_schemes = serializers.PrimaryKeyRelatedField(
+        queryset=coding_models.CodeScheme.objects.all(),
+        many=True)
+
+    class Meta:
+        model = coding_models.Assignment
+        fields = (
+            'created_by', 'created_date', 'deleted_by', 'deleted_date',
+            'id', 'name', 'description',
+            'coder', 'assigned_submissions', 'assigned_comments',
+            'code_schemes'
             )
 

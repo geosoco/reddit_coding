@@ -48,9 +48,9 @@ class Assignment(base_models.FullAuditModel):
     code_schemes = models.ManyToManyField(CodeScheme)
     coder = models.ForeignKey(User)
     assigned_submissions = models.ManyToManyField(
-        main_models.Submission, blank=True)
+        main_models.Submission, blank=True, null=True)
     assigned_comments = models.ManyToManyField(
-        main_models.Comment, blank=True)
+        main_models.Comment, blank=True, null=True)
 
     def __str__(self):
         return "%s (%s - %s)" % (
