@@ -79,12 +79,6 @@ function CodingCodingCtrl(
 	}
 
 
-	$rootScope.$on("code:toggle", function(event, code){
-		console.log("toggleCode");
-		vm.toggleCode(code);
-	})
-
-
 	/*
 	* onKeyDown
 	*
@@ -319,8 +313,17 @@ function CodingCodingCtrl(
 				console.error("failed to load items: " + error);
 			})
 
+		// handle code toggle message
+		$rootScope.$on("code:toggle", function(event, code){
+			console.log("toggleCode");
+			vm.toggleCode(code);
+		});
+
+		// attach hot key listener
 		var $doc = angular.element(document);
 		$doc.on('keydown', vm.onKeyDown);
+
+		// make sure to remove it!
 		$scope.$on("$destroy", function() {
 			var $doc = angular.element(document);
 			$doc.off('keydown', vm.onKeyDown);
