@@ -16,7 +16,7 @@
 	</thead>
 	<tbody>
 		<tr ng-repeat="comment in adctrl.assignment.assigned_comments">
-			<td><a ui-sref="coding.coding.toplevelcomment({aid: adctrl.assignment.id, id: comment.id})">{{comment.id}}</a></td>
+			<td><a ui-sref="coding.coding.assignment({aid: adctrl.assignment.id, id: comment.id})">{{comment.id}}</a></td>
 			<td>{{comment.subreddit}}</td>
 			<td>{{comment.article}}</td>
 			<td>{{comment.body | limitTo:60}}</td>
