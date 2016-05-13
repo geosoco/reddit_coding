@@ -259,7 +259,8 @@ class AssignmentViewSet(viewsets.ModelViewSet):
     filter_backends = (backends.DjangoFilterBackend,)
 
     def get_serializer_class(self):
-        if self.action == 'get':
+        print self.action, "\n" * 4
+        if self.action == 'retrieve':
             return api_serializers.AssignmentSerializer
         
         return api_serializers.AssignmentSimpleSerializer

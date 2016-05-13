@@ -260,10 +260,14 @@ ul.flat-list > li {
  *
  */
 
+.code-instance-list {
+	margin-bottom: 0;
+}
+
 .code-instance {
 	border-radius: 4px;
 	background-color: #ccc;
-	padding-left: 5px;
+	padding: 2px 5px;
 	position: relative;
 }
 
@@ -287,4 +291,62 @@ ul.flat-list > li {
 .code-container .code-instance {
 	margin-right: 10px;
 }
+
+.code-list ul { padding-left: 0; }
+.code-list-code { margin-bottom: 5px;  clear: both; }
+
+.code-key-code, .code-color-box, .code-name { float: left; }
+
+.code-key-code { 
+    width: 24px;
+    height: 24px;
+    background-color: #eee;
+    text-align: center;
+    margin-right: 10px;
+    box-shadow: 1px 1px 2px -1px #fff inset, -1px -1px 1px 1px #333 inset, 1px 1px 3px 0 #888;
+    padding-top: 3px;
+    display: inline-block;
+    border-radius: 3px;
+    
+}
+
+.code-color-box { 
+	margin-left: 10px;
+	margin-right: 5px; 
+	width: 5px;
+	height: 24px;
+	display: inline-block; 
+}
+
+.test-code-1 { 
+	background-color: #600;
+	color: #fff;
+}
+
+.code-color-1  { background-color: #1f77b4; color: #fff; }
+.code-color-2  { background-color: #aec7e8; color: #333; }
+.code-color-3  { background-color: #ff7f0e; color: #fff; }
+.code-color-4  { background-color: #ffbb78; color: #333; }
+.code-color-5  { background-color: #2ca02c; color: #fff; }
+.code-color-6  { background-color: #98df8a; color: #333; }
+.code-color-7  { background-color: #d62728; color: #fff; }
+.code-color-8  { background-color: #ff9896; color: #333; }
+.code-color-9  { background-color: #9467bd; color: #fff; }
+.code-color-10 { background-color: #c5b0d5; color: #333; }
+.code-color-11 { background-color: #8c564b; color: #fff; }
+.code-color-12 { background-color: #c49c94; color: #333; }
+.code-color-13 { background-color: #e377c2; color: #fff; }
+.code-color-14 { background-color: #f7b6d2; color: #333; }
+.code-color-15 { background-color: #7f7f7f; color: #fff; }
+.code-color-16 { background-color: #c7c7c7; color: #333; }
+.code-color-17 { background-color: #bcbd22; color: #fff; }
+.code-color-18 { background-color: #dbdb8d; color: #333; }
+.code-color-19 { background-color: #17becf; color: #fff; }
+.code-color-20 { background-color: #9edae5; color: #333; }
+
+
+
+
+.assignment-previous { text-align: left; }
+.assignment-next { text-align: right; }
 

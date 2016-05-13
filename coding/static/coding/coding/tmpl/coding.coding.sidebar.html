@@ -1,9 +1,26 @@
-<nav id="sidebar-nav">
-	Nav
-</nav>
-<div>
-	Logo
+<p><a ui-sref="coding.assignment.detail({'id': cctrl.assignment.data.id })"><span class="glyphicon glyphicon-chevron-left"></span>&nbsp;Return to list</a> </p>
+<h5>Current Assignment</h5>
+<div class="container-fluid">
+	<div class="row">
+		<nav id="sidebar-nav">
+			<div class="col-xs-6 assignment-previous">
+				<div ng-if="cctrl.prevAssignment != null">
+					<a ui-sref="coding.coding.assignment({'aid': cctrl.assignmentId, 'id': cctrl.prevAssignment.id  })">
+						<span class="glyphicon glyphicon-chevron-left"></span>&nbsp;Previous
+					</a>
+				</div>
+			</div>
+			<div class="col-xs-6 assignment-next">
+				<div ng-if="cctrl.nextAssignment != null">
+					<a ui-sref="coding.coding.assignment({'aid': cctrl.assignmentId, 'id': cctrl.nextAssignment.id  })">
+						Next&nbsp;<span class="glyphicon glyphicon-chevron-right"></span>
+					</a>
+				</div>
+			</div>	
+		</nav>
+	</div>
 </div>
+
 <div id="sidebar-codelist-cntr">
 	<div id="codelist-cntr">
 		<div ng-include="'/static/coding/coding/tmpl/coding.code.list.html'"></div>

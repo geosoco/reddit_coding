@@ -4,7 +4,8 @@
 
 angular.module("coding.coding")
 	.factory("CommentCodeInstanceListModel", CommentCodeInstanceListModelFactory)
-	.factory("CodeableCommentModel", CodeableCommentModelFactory);
+	.factory("CodeableCommentModel", CodeableCommentModelFactory)
+	.factory("AssignmentModel", AssignmentModelFactory)
 
 })();
 
@@ -338,23 +339,84 @@ function CodeableCommentModelFactory(
 
 
 /*
- * CodeableCommentModelFactory
+ * AssignmentModelFactory
  *
  *
  */
 
-CodeableCommentThreadModelFactory.$inject = [];
+AssignmentModelFactory.$inject = ['$q', 'Assignment', 'ResourceHelperService'];
 
-function CodeableCommentThreadModelFactory(
-		$q, Comment, CommentCodeInstance, CommentCodeInstanceListModel, ResourceHelperService) {
+function AssignmentModelFactory(
+		$q, Assignment, ResourceHelperService) {
 	return function(params) {
-		var self = this;
 		params = params || {};
 
-		// data
-		self.data = {};
-		self.codeInstanceList = new CommentCodeInstanceListModel();
-		self.children = [];
+		var self = {
+			data: null,
+			_assignment: null,
+
+			// methods
+			get: get,
+			getCommentIndexById: getCommentIndexById,
+			getNextComment: getNextComment,
+			getPreviousComment: getPreviousComment
+		};
+
+
+		return self;
+
+		//////////////////////////////
+
+
+
+		function get(params) {
+			self.data = Assignment.get(params);
+
+			self.data.$promise
+				.catch(function(err) { 
+					console.error("Error getting comment");
+					console.dir(error);
+				})
+
+			return self.data;
+		}
+
+		function getCommentIndexById(id) {
+			if(self.data && self.data.assigned_comments) {
+				var ac = self.data.assigned_comments;
+				for(var i = 0; i < ac.length; i++) {
+					if(ac[i].id == id) { return i; }
+				}
+			}
+
+			return -1;
+		}
+
+
+		function getNextComment(currentCommentId) {
+			if(!self.data || !self.data.assigned_comments) return null;
+
+			var idx = getCommentIndexById(currentCommentId) + 1;
+			if(idx >= 0 && idx < self.data.assigned_comments.length) {
+				return self.data.assigned_comments[idx];
+			}
+
+			return null;
+		}
+
+
+		function getPreviousComment(currentCommentId) {
+			if(!self.data || !self.data.assigned_comments) return null;
+
+			var idx = getCommentIndexById(currentCommentId) - 1;
+			if(idx >= 0) {
+				return self.data.assigned_comments[idx];
+			}
+
+			return null;
+		}
+
+
 	}
 }
 

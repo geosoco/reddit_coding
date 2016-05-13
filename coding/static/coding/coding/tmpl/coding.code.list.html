@@ -7,8 +7,14 @@
 	</div>
 	<div class="code-list well well-sm">
 		<ul class="no-bullets">
-			<li ng-repeat="code in cclc.codes | filter:cclc.filterAny">
-				<a href="#" ng-click="cclc.toggleCode($event,code.id)" data-id="{{code.id}}">{{code.name}}</a>
+			<li class="code-list-code clearfix" ng-repeat="code in cclc.codes | filter:cclc.filterAny | orderBy: 'id'">
+				<a href="#" ng-click="cclc.toggleCode($event,code.id)" data-id="{{code.id}}">
+					<div class="code-key-code">
+						<div class="code-key-inner">{{code.key}}</div>
+					</div>
+					<div class="code-color-box {{code.css_class}}"></div>
+					<div class="code-name">{{code.name}}</div>
+				</a>
 			</li>
 		</ul>
 	</div>	

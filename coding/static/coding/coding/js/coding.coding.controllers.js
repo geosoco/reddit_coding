@@ -11,34 +11,44 @@ angular.module('coding.coding')
 
 
 
+
+
 CodingCodingCtrl.$inject = [
 	'$stateParams',
 	'$scope',
 	'$rootScope',
+	'$document',
 	'$anchorScroll',
 	'$location',
 	'ResourceHelperService',
 	'Comment',
 	'Submission',
 	'CommentCodeInstance',
-	'CodeableCommentModel'
+	'CodeableCommentModel',
+	'AssignmentModel'
 ];
 function CodingCodingCtrl(
 		$stateParams,
 		$scope,
 		$rootScope,
+		$document,
 		$anchorScroll,
 		$location,
 		ResourceHelperService,
 		Comment,
 		Submission,
 		CommentCodeInstance,
-		CodeableCommentModel) {
+		CodeableCommentModel,
+		AssignmentModel) {
 	var vm = this;
 
 
+	vm.rootCommentId = $stateParams.id;
+	vm.assignmentId = $stateParams.aid;
+	vm.assignment = new AssignmentModel();
+	vm.nextAssignment = null;
+	vm.previousAssignment = null;
 	vm.submission = null;
-	vm.rootCommentId = $stateParams.id,
 	vm.loading_progress = {
 		count: null,
 		total: null
@@ -52,6 +62,8 @@ function CodingCodingCtrl(
 	vm.rootComment = new CodeableCommentModel();
 	vm.selectedIndex = 0;
 	vm.codeInstances = [];
+	vm.codes = [];
+	vm.codeKeyMap = {};
 
 
 	/*
@@ -79,6 +91,29 @@ function CodingCodingCtrl(
 	}
 
 
+	function joinCodes() {
+		for(var i = 0; i < vm.assignment.data.code_schemes.length; i++) {
+			var scheme = vm.assignment.data.code_schemes[i];
+
+			// append them to our list
+			Array.prototype.push.apply(vm.codes, scheme.code_set);
+		}
+	}
+
+	function createKeyMap() {
+		vm.codes.forEach(function(d){ 
+			vm.codeKeyMap[d.key.charCodeAt()] = d;
+		})
+	}
+
+
+	function checkCodeHotKeys(event) {
+		var key = event.key || event.keyCode;
+		if(key in vm.codeKeyMap) {
+			vm.toggleCode(vm.codeKeyMap[key].id);
+		}
+	}
+
 	/*
 	* onKeyDown
 	*
@@ -95,6 +130,7 @@ function CodingCodingCtrl(
 					case 221: vm.selectNext(); event.preventDefault(); break;
 					case 219: vm.selectPrevious(); event.preventDefault(); break;
 					default:
+						checkCodeHotKeys(event);
 						console.log("keydown: ");
 						console.dir(event);
 						break;
@@ -298,20 +334,33 @@ function CodingCodingCtrl(
 	function init() {
 		// start data requests
 
-		vm.rootComment.getEntireThread(vm.rootCommentId)
-			.then(function(data) {
-				vm.commentsList = vm.rootComment.commentsList;
-				if(vm.commentsList && vm.commentsList.length > 0) {
-					vm.submission_id = vm.commentsList[0].data.article;
-					return requestSubmission();
-				}
-				return data;
-			}).then(function(data){
-				vm.changeSelection(0,true);
-			})
-			.catch(function(error){
-				console.error("failed to load items: " + error);
-			})
+
+		vm.assignment.get(
+			{id: vm.assignmentId}
+		).$promise.then(function(data){
+			// deal with the codes
+			joinCodes();
+			createKeyMap();
+
+			vm.nextAssignment = vm.assignment.getNextComment(vm.rootCommentId);
+			vm.prevAssignment = vm.assignment.getPreviousComment(vm.rootCommentId);
+
+			return vm.rootComment.getEntireThread(vm.rootCommentId);	
+		}).then(function(data) {
+			// 
+			vm.commentsList = vm.rootComment.commentsList;
+			if(vm.commentsList && vm.commentsList.length > 0) {
+				vm.submission_id = vm.commentsList[0].data.article;
+				return requestSubmission();
+			}
+			return data;
+		}).then(function(data){
+			vm.changeSelection(0,true);
+		})
+		.catch(function(error){
+			console.error("failed to load items: " + error);
+		})
+
 
 		// handle code toggle message
 		$rootScope.$on("code:toggle", function(event, code){
@@ -338,9 +387,12 @@ function CodingCodingCtrl(
 
 
 
-CodingSidebarCtrl.$inject = ['$scope'];
-function CodingSidebarCtrl($scope) {
+CodingSidebarCtrl.$inject = ['$scope', '$rootScope', 'AssignmentModel'];
+function CodingSidebarCtrl($scope, $rootScope, AssignmentModel ) {
 	console.log("CodingSidebar!");
+
+
+
 }
 
 

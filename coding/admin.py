@@ -5,7 +5,6 @@ import models
 
 class CodeAdmin(admin.ModelAdmin):
     list_display = ('id', 'scheme', 'name', 'description',)
-    readonly_fields = ('id', 'scheme', 'name', 'description',)
 
 
 class SubmissionCodeInstanceAdmin(admin.ModelAdmin):

@@ -12,6 +12,7 @@
 			'main.submission',
 			'main.comment',
 			'coding.home',
+			'coding.coding',
 			'angularMoment',
 			'ng-showdown'
 		])
@@ -34,6 +35,11 @@
 				url: "/create",
 				controller: "AssignmentCreateCtrl as acctrl",
 				templateUrl: "/static/coding/assignment/tmpl/coding.assignment.create.html"
+			})
+			.state("coding.assignment.detail", {
+				url: "/{id}",
+				controller: "AssignmentDetailCtrl as adctrl",
+				templateUrl: "/static/coding/assignment/tmpl/coding.assignment.detail.html"
 			})
 
 	}

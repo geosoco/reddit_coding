@@ -3,7 +3,8 @@
 
 angular.module("coding.assignment")
 	.controller("AssignmentHomeCtrl", AssignmentHomeCtrl)
-	.controller("AssignmentCreateCtrl", AssignmentCreateCtrl);
+	.controller("AssignmentCreateCtrl", AssignmentCreateCtrl)
+	.controller("AssignmentDetailCtrl", AssignmentDetailCtrl)
 
 
 AssignmentHomeCtrl.$inject = ["$scope", "$location", "Assignment"];
@@ -82,6 +83,25 @@ function AssignmentCreateCtrl($scope, $location, $q, Assignment, CodeScheme, Sys
 
 	}
 
+}
+
+
+AssignmentDetailCtrl.$inject = ["$scope", "$stateParams", "Assignment", "CodeScheme", "SysUser"]
+function AssignmentDetailCtrl($scope, $stateParams, Assignment, CodeScheme, SysUser) {
+	var vm = this;
+
+	console.log("assignmentdetail")
+
+	vm.assignment = Assignment.get({id: $stateParams.id});
+
+	vm.assignment.$promise
+		.then(function(d){
+			console.log("success");
+		})
+		.catch(function(err){
+			console.error("failed to load data");
+			console.dir(err);
+		})
 }
 
 

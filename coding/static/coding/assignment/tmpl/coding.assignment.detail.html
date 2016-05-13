@@ -1,0 +1,27 @@
+<div>testing!</div>
+<h1>{{adctrl.assignment.name}}</h1>
+<div class="assignment-description">{{adctrl.assignment.description}}</div>
+
+<h3>Comments ({{adctrl.assignment.assigned_comments.length}})</h3>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>id</th>
+			<th>subreddit</th>
+			<th>article</th>
+			<th>body</th>
+			<th>num descendants</th>
+			<th>code count</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="comment in adctrl.assignment.assigned_comments">
+			<td><a ui-sref="coding.coding.toplevelcomment({aid: adctrl.assignment.id, id: comment.id})">{{comment.id}}</a></td>
+			<td>{{comment.subreddit}}</td>
+			<td>{{comment.article}}</td>
+			<td>{{comment.body | limitTo:60}}</td>
+			<td>{{comment.num_descendants}}</td>
+			<td>{{comment.code_count}}</td>
+		</tr>
+	</tbody>
+</table>

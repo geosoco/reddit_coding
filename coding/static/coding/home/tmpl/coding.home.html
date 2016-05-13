@@ -6,7 +6,7 @@
 	<h2>My assignments</h2>
 	<a ui-sref="coding.assignment.create" class="btn btn-primary">Create Assignment</a>
 	<ul>
-		<li ng-repeat="asgnmt in home.assignments.results" data-id="{{asgnmt.id}}"><a ui-sref="">{{asgnmt.name}}</a></li>
+		<li ng-repeat="asgnmt in home.assignments.results" data-id="{{asgnmt.id}}"><a ui-sref="coding.assignment.detail({id:asgnmt.id})">{{asgnmt.name}}</a></li>
 	</ul>
 	<pre>{{home.assignments|json}}</pre>
 </div>

@@ -1,7 +1,9 @@
+from django.db.models import Count
 from django.contrib.auth.models import User, Group
 import main.models as main_models
 import coding.models as coding_models
 from rest_framework import serializers
+
 
 
 class DjangoUserSerializer(serializers.ModelSerializer):
@@ -175,6 +177,29 @@ class CommentCodeInstanceSerializer(serializers.ModelSerializer):
             'code', 'comment', 'assignment'
             )
 
+class AssignmentCodedCommentSerializer(serializers.ModelSerializer):
+    code_count = serializers.SerializerMethodField()
+    body = serializers.SerializerMethodField()
+    subreddit = serializers.SerializerMethodField()
+
+    class Meta:
+        model = main_models.Comment
+        fields = (
+            'id', 'code_count', 'body', 'num_descendants', 'subreddit',
+            'article' )
+
+    def get_code_count(self, obj):
+        return coding_models.CommentCodeInstance.objects.filter(
+            comment__root_comment=obj.id,
+            deleted_by__isnull=True,
+            assignment_id=self.parent.parent.instance
+        ).count()
+
+    def get_subreddit(self, obj):
+        return obj.data['subreddit']
+
+    def get_body(self, obj):
+        return obj.data['body']
 
 
 class CommentWithCodesSerializer(CommentSerializer):
@@ -195,7 +220,7 @@ class AssignmentSerializer(serializers.ModelSerializer):
     assigned_submissions = SubmissionSerializer(
         many=True, allow_empty=True,
         style={'base_template': 'input.html'})
-    assigned_comments = CommentSerializer(
+    assigned_comments = AssignmentCodedCommentSerializer(
         many=True, allow_empty=True,
         style={'base_template': 'input.html'})
     code_schemes = CodeSchemeSerializer(many=True)
@@ -213,15 +238,18 @@ class AssignmentSerializer(serializers.ModelSerializer):
 class AssignmentSimpleSerializer(serializers.ModelSerializer):
     coder = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(),
-        many=False)
+        many=False,
+        style={'base_template': 'input.html'})
     assigned_submissions = serializers.PrimaryKeyRelatedField(
         queryset=main_models.Submission.objects.all(),
         many=True,
-        allow_empty=True)
+        allow_empty=True,
+        style={'base_template': 'input.html'})
     assigned_comments = serializers.PrimaryKeyRelatedField(
         queryset=main_models.Comment.objects.all(),
         many=True,
-        allow_empty=True)
+        allow_empty=True,
+        style={'base_template': 'input.html'})
 
     code_schemes = serializers.PrimaryKeyRelatedField(
         queryset=coding_models.CodeScheme.objects.all(),
