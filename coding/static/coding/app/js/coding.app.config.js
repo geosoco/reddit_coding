@@ -1,6 +1,10 @@
 'use string';
 (function(){
 	
+
+
+
+
 	function CodingAppConfig(
 		$resourceProvider,
 		$httpProvider,
@@ -50,6 +54,14 @@
 					abstract: true,
 					template: "<ui-view/>"
 				});
+
+
+			// configure showdown
+			$showdownProvider
+				.setOption("strikethrough", true)
+				.setOption("simplifiedAutoLink", true)
+				.setOption("literalMidWordUnderscores", true)
+				.loadExtension("reddit")
 
 	}
 
