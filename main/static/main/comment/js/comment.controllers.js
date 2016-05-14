@@ -16,10 +16,8 @@ CommentListCtrl.$inject = ['$scope', '$location', 'Comment'];
 function CommentCtrl($scope, $element, $compile, Comment) {
 	var vm = this;
 
-	vm.expanded = true;
-
 	vm.toggleExpand = function() {
-		vm.expanded = !vm.expanded;
+		vm.comment.expanded = !vm.comment.expanded;
 	}
 
 	vm.onClick = function(ev) {

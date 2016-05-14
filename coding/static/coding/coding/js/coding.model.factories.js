@@ -175,7 +175,8 @@ function CodeableCommentModelFactory(
 			"get": get,
 			"getEntireThread": getEntireThread,
 			"addChild": addChild,
-			"addCodeInstances": addCodeInstances
+			"addCodeInstances": addCodeInstances,
+			"isVisible": isVisible
 
 		}
 
@@ -331,6 +332,22 @@ function CodeableCommentModelFactory(
 			self.addCodeInstances(node_map, instances);
 
 			return rootNodeIdx;
+		}
+
+
+		function isVisible() {
+			var node = self;
+
+
+
+			while(node.parent != null) {
+				if(node.parent.expanded !== true) {
+					return false;
+				}
+				node = node.parent;
+			}
+
+			return true;
 		}
 	}
 }

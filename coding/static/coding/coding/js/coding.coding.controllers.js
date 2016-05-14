@@ -84,6 +84,20 @@ function CodingCodingCtrl(
 		}
 	}
 
+	vm.expandComment = function() {
+		var node = getSelectedComment();
+		if(node != null) {
+			node.expanded = true;
+		}
+	}
+
+	vm.collapseComment = function() {
+		var node = getSelectedComment();
+		if(node != null) {
+			node.expanded = false;
+		}
+	}
+
 
 	function getSelectedComment() {
 		if(vm.selectedIndex >= 0 && 
@@ -151,6 +165,8 @@ function CodingCodingCtrl(
 				switch(key) {
 					case 221: vm.selectNext(); event.preventDefault(); break;
 					case 219: vm.selectPrevious(); event.preventDefault(); break;
+					case 187: vm.expandComment(); event.preventDefault(); break;
+					case 189: vm.collapseComment(); event.preventDefault(); break;
 					default:
 						checkCodeHotKeys(event);
 						console.log("keydown: ");
@@ -313,6 +329,10 @@ function CodingCodingCtrl(
 		var curNode = vm.commentsList[vm.selectedIndex];
 		var nextNode = getNext(curNode);
 
+		while(nextNode != null && !nextNode.isVisible()) {
+			nextNode = getNext(nextNode);
+		}
+
 		if(nextNode) {
 			vm.selectId(nextNode.data.id);
 		}
@@ -327,6 +347,10 @@ function CodingCodingCtrl(
 	vm.selectPrevious = function() {
 		var curNode = vm.commentsList[vm.selectedIndex];
 		var prevNode = getPrevious(curNode);
+
+		while(prevNode != null && !prevNode.isVisible()) {
+			prevNode = getPrevious(prevNode);
+		}
 
 		if(prevNode) {
 			vm.selectId(prevNode.data.id);
