@@ -20,6 +20,19 @@
 		</nav>
 	</div>
 </div>
+<div id="sidebar-code-tree">
+	<h5>Selected item code summary</h5>
+	<ul class="flat-list">
+		<li ng-repeat="(idx,cm) in cctrl.selectedCodeHiearachy">
+			<span ng-if="idx > 0" class="glyphicon glyphicon-chevron-right code-tree-divider"></span>
+			<ul class="flat-list" ng-case-when="">
+				<li ng-if="!cm.length">??</li>
+				<li ng-repeat="c in cm">
+					<div class="code-color-box {{c.code.css_class}}"><span class="code-name">{{c.code.name}}</span></div></li>
+			</ul>
+		</li>
+	</ul>
+</div>
 
 <div id="sidebar-codelist-cntr">
 	<div id="codelist-cntr">

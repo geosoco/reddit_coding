@@ -295,7 +295,7 @@ ul.flat-list > li {
 .code-list ul { padding-left: 0; }
 .code-list-code { margin-bottom: 5px;  clear: both; }
 
-.code-key-code, .code-color-box, .code-name { float: left; }
+.code-list .code-key-code,.code-list .code-color-box,.code-list .code-name { float: left; }
 
 .code-key-code { 
     width: 24px;
@@ -349,4 +349,22 @@ ul.flat-list > li {
 
 .assignment-previous { text-align: left; }
 .assignment-next { text-align: right; }
+
+
+
+#sidebar-code-tree ul { display: inline; }
+#sidebar-code-tree .code-color-box {
+	height: 1em; 
+	min-width: 1em;
+	margin-left: 0;
+	margin-right: 0;
+	width: auto;
+}
+
+#sidebar-code-tree .code-color-box .code-name { opacity: 0; display: none; font-size: x-small;}
+#sidebar-code-tree .code-color-box:hover { }
+#sidebar-code-tree .code-color-box:hover .code-name { opacity: 1; display: block;}
+
+#sidebar-code-tree .code-tree-divider {
+}
 

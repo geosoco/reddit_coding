@@ -64,6 +64,7 @@ function CodingCodingCtrl(
 	vm.codeInstances = [];
 	vm.codes = [];
 	vm.codeKeyMap = {};
+	vm.selectedCodeHiearachy = [];
 
 
 	/*
@@ -75,7 +76,9 @@ function CodingCodingCtrl(
 		if(vm.selectedIndex >= 0) {
 			var comment = getSelectedComment();
 
-			comment.codeInstanceList.toggleCode(comment.data.id, code)
+			comment.codeInstanceList.toggleCode(comment.data.id, code);
+
+			buildHierarchicalCodeList();
 		} else {
 			// submission
 		}
@@ -112,6 +115,25 @@ function CodingCodingCtrl(
 		if(key in vm.codeKeyMap) {
 			vm.toggleCode(vm.codeKeyMap[key].id);
 		}
+	}
+
+
+	function buildHierarchicalCodeList() {
+		var curNode = vm.commentsList[vm.selectedIndex];
+
+		vm.selectedCodeHiearachy = [];
+		while(curNode != null) {
+			if(curNode.codeInstanceList != null && curNode.codeInstanceList.instances.length > 0) {
+				var tmp = curNode.codeInstanceList.instances.slice(0);
+				vm.selectedCodeHiearachy.unshift(tmp);
+			} else {
+				vm.selectedCodeHiearachy.unshift([]);
+			}
+			
+
+			curNode = curNode.parent;
+		}
+
 	}
 
 	/*
@@ -181,6 +203,9 @@ function CodingCodingCtrl(
 			// select new item
 			vm.selectedIndex = idx;
 			var id = setSelection(vm.selectedIndex, true);
+
+			buildHierarchicalCodeList();
+
 			$location.hash(id);
 			$anchorScroll.yOffset = 200;
 			$anchorScroll();
@@ -308,9 +333,6 @@ function CodingCodingCtrl(
 		}
 	}
 
-
-
-
 	/*
 	* loadingFinished
 	*
@@ -321,10 +343,6 @@ function CodingCodingCtrl(
 		buildCommentListFromTree();
 		vm.changeSelection(0, true);
 	}
-	
-
-
-
 
 	/*
 	* init
