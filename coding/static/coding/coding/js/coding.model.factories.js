@@ -124,7 +124,7 @@ function CommentCodeInstanceListModelFactory(Comment, CommentCodeInstance) {
 			if(code !== null) {
 				deleteInstance(code.id);
 			} else {
-				addInstance(commentId, codeId);
+				addInstance(commentId, codeId, assignment);
 			}
 		}
 

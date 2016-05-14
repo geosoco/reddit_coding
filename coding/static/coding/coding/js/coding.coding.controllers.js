@@ -76,7 +76,7 @@ function CodingCodingCtrl(
 		if(vm.selectedIndex >= 0) {
 			var comment = getSelectedComment();
 
-			comment.codeInstanceList.toggleCode(comment.data.id, code);
+			comment.codeInstanceList.toggleCode(comment.data.id, code, vm.assignment.data.id);
 
 			buildHierarchicalCodeList();
 		} else {
