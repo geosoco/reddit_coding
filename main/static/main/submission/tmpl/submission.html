@@ -25,8 +25,10 @@
 				by
 				<a href="https://www.reddit.com/user/{{submission.author}}" class="author">{{submission.author}}</a>
 			</p>
+            <p class="selftext" ng-if="submission.data.selftext" markdown-to-html="submission.data.selftext"></p>
 			<ul class="flat-list buttons">
 				<li><a>{{submission.data.num_comments}} comments</a></li>
+                <li><a href="{{submission.data.permalink}}">permalink</a></li>
 				<li><a>save</a></li>
 				<li><a>parent</a></li>
 				<li><a>report</a></li>
